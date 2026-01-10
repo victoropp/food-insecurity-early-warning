@@ -19,7 +19,7 @@ Features Created:
 - dmd_ratio_crisis_frequency: dominant crisis oscillation period (months)
 - dmd_ratio_crisis_amplitude: dominant crisis mode strength
 
-Author: Victor Collins Oppon, Claude Code
+Author: Victor Collins Oppon
 Date: December 2025 (Redesigned: Dec 24, 2025)
 """
 

@@ -18,6 +18,7 @@ import json
 import geopandas as gpd
 from shapely.geometry import Point
 import warnings
+from config import BASE_DIR
 warnings.filterwarnings('ignore')
 
 # =============================================================================
@@ -30,8 +31,8 @@ DATA_DIR = RESULTS_DIR / "stage2_features" / "phase3_combined"
 OUTPUT_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION" / "academic_journal_submission"
 
 # Geographic data paths
-IPC_SHAPEFILE_DIR = Path(r"C:\GDELT_Africa_Extract\Data\ipc_shapefiles")
-AFRICA_BASEMAP_FILE = Path(r"C:\GDELT_Africa_Extract\data\natural_earth\ne_50m_admin_0_countries_africa.shp")
+IPC_SHAPEFILE_DIR = BASE_DIR / "data" / "external" / "shapefiles" / "ipc_boundaries"
+AFRICA_BASEMAP_FILE = BASE_DIR / "data" / "external" / "shapefiles" / "natural_earth" / "ne_50m_admin_0_countries_africa.shp"
 AFRICA_EXTENT = [-20, 55, -35, 40]  # [min_lon, max_lon, min_lat, max_lat]
 
 # =============================================================================

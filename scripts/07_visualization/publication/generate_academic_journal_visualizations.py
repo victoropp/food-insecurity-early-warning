@@ -12,7 +12,7 @@ Story Arc:
 
 ALL METRICS DYNAMICALLY COMPUTED - NO HARDCODED VALUES
 
-Author: Generated with Claude Code
+Author: Victor Collins Oppon
 Date: 2026-01-02
 """
 
@@ -43,8 +43,8 @@ BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 DATA_DIR = BASE_DIR / "data"
 OUTPUT_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION" / "academic_journal_submission"
-AFRICA_BASEMAP = Path(r"C:\GDELT_Africa_Extract\data\natural_earth\ne_50m_admin_0_countries_africa.shp")
-IPC_SHAPEFILE_DIR = Path(r"C:\GDELT_Africa_Extract\Data\ipc_shapefiles")
+AFRICA_BASEMAP = BASE_DIR / "data" / "external" / "shapefiles" / "natural_earth" / "ne_50m_admin_0_countries_africa.shp"
+IPC_SHAPEFILE_DIR = BASE_DIR / "data" / "external" / "shapefiles" / "ipc_boundaries"
 AFRICA_EXTENT = [-20, 55, -35, 40]  # [west, east, south, north]
 
 # Create output directories

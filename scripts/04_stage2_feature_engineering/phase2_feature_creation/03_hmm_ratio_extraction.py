@@ -19,7 +19,7 @@ Features Created:
 - hmm_ratio_transition_risk: P(next_state=Crisis | current_state)
 - hmm_ratio_entropy: state uncertainty
 
-Author: Victor Collins Oppon, Claude Code
+Author: Victor Collins Oppon
 Date: December 2025 (Redesigned: Dec 24, 2025)
 """
 

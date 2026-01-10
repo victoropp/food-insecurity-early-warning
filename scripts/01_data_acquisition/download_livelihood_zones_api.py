@@ -11,9 +11,10 @@ import requests
 import json
 import time
 from tqdm import tqdm
+from config import BASE_DIR
 
 # Output directory
-OUTPUT_DIR = r"D:\GDELT_Africa_Extract\shapefiles\livelihood_zones"
+OUTPUT_DIR = BASE_DIR / "data" / "external" / "shapefiles" / "livelihood_zones"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # FEWS NET Data Warehouse API endpoint for geographic features

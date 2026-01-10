@@ -7,7 +7,7 @@ in predicting difficult cases (those missed by AR baseline).
 
 ALL METRICS DYNAMICALLY COMPUTED - NO HARDCODED VALUES
 
-Author: Generated with Claude Code
+Author: Victor Collins Oppon
 Date: 2026-01-02
 """
 

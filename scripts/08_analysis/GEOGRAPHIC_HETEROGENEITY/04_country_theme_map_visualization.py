@@ -35,7 +35,7 @@ warnings.filterwarnings('ignore')
 
 BASE_DIR = Path(str(BASE_DIR))
 ANALYSIS_DIR = BASE_DIR / "Dissertation Write Up" / "GEOGRAPHIC_HETEROGENEITY_ANALYSIS"
-GEODATA_DIR = Path(r"C:\GDELT_Africa_Extract\data")
+GEODATA_DIR = BASE_DIR / "data" / "external"
 FIGURES_OUTPUT = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "ch05_discussion"
 FIGURES_OUTPUT.mkdir(parents=True, exist_ok=True)
 

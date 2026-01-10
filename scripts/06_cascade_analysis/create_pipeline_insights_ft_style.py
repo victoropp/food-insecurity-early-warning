@@ -28,7 +28,7 @@ BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 DATA_DIR = BASE_DIR / "DATA"
 FIGURES_DIR = BASE_DIR / "FIGURES" / "pipeline_insights"
-AFRICA_BASEMAP_FILE = Path(r"C:\GDELT_Africa_Extract\data\natural_earth\ne_50m_admin_0_countries_africa.shp")
+AFRICA_BASEMAP_FILE = BASE_DIR / "data" / "external" / "shapefiles" / "natural_earth" / "ne_50m_admin_0_countries_africa.shp"
 
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 

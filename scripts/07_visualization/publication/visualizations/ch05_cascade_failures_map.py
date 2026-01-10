@@ -81,7 +81,7 @@ for country, count in country_failures.head(5).items():
 
 # Load Africa shapefile for basemap
 print("\nLoading geographic data...")
-GEO_DIR = Path(r"C:\GDELT_Africa_Extract\data\natural_earth")
+GEO_DIR = BASE_DIR / "data" / "external" / "shapefiles" / "natural_earth"
 africa = gpd.read_file(GEO_DIR / "ne_50m_admin_0_countries_africa.shp")
 
 # Create country centroids lookup for annotations (NOT for district coordinates!)

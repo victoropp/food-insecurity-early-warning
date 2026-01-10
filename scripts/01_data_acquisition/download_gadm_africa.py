@@ -15,9 +15,10 @@ import zipfile
 from io import BytesIO
 from tqdm import tqdm
 import time
+from config import BASE_DIR
 
 # Output directory
-OUTPUT_DIR = r"D:\GDELT_Africa_Extract\shapefiles\gadm"
+OUTPUT_DIR = BASE_DIR / "data" / "external" / "shapefiles" / "gadm"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # All 54 African Countries with ISO 3166-1 alpha-3 codes (used by GADM)

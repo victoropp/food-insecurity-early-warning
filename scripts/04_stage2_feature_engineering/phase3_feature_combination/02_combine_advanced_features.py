@@ -20,7 +20,7 @@ This script combines:
 
 Output: Comprehensive dataset with 32 features (18 base + 6 HMM + 8 DMD)
 
-Author: Victor Collins Oppon, Claude Code
+Author: Victor Collins Oppon
 Date: December 2025 (Redesigned: Dec 24, 2025)
 """
 

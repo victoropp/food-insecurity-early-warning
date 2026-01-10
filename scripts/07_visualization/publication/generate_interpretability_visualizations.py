@@ -8,7 +8,7 @@ RQ1: What's the role of different kinds of news?
 RQ2: What's the role of hidden variables?
 RQ3: Are these results equally important in every location?
 
-Author: Generated with Claude Code
+Author: Victor Collins Oppon
 Date: 2026-01-02
 """
 

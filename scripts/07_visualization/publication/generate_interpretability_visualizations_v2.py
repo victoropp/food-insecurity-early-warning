@@ -15,7 +15,7 @@ Improvements:
 - Clearer visualizations (grouped bars instead of stacked/pie charts)
 - Fixed blank panels using comprehensive data
 
-Author: Generated with Claude Code
+Author: Victor Collins Oppon
 Date: 2026-01-03
 """
 

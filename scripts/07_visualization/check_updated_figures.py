@@ -1,7 +1,8 @@
 from pathlib import Path
 from datetime import datetime, timedelta
+from config import BASE_DIR
 
-figures_dir = Path('C:/GDELT_Africa_Extract/Scripts/district_pipeline/FINAL_PIPELINE/FIGURES')
+figures_dir = BASE_DIR / 'figures'
 cutoff = datetime.now() - timedelta(hours=1)
 
 updated = [(f.parent.name, datetime.fromtimestamp(f.stat().st_mtime)) for f in figures_dir.rglob('*.png')]

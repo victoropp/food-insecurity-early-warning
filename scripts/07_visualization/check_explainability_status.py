@@ -1,7 +1,8 @@
 from pathlib import Path
 from datetime import datetime, timedelta
+from config import BASE_DIR
 
-figures_dir = Path('C:/GDELT_Africa_Extract/Scripts/district_pipeline/FINAL_PIPELINE/FIGURES')
+figures_dir = BASE_DIR / 'figures'
 cutoff = datetime.now() - timedelta(minutes=10)
 
 categories = {

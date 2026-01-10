@@ -66,7 +66,7 @@ ax_bar = fig.add_subplot(gs[1])
 # --- MAP: Geographic distribution ---
 # Load Africa basemap
 try:
-    africa = gpd.read_file(r"C:\GDELT_Africa_Extract\data\natural_earth\ne_50m_admin_0_countries_africa.shp")
+    africa = gpd.read_file(BASE_DIR / "data" / "external" / "shapefiles" / "natural_earth" / "ne_50m_admin_0_countries_africa.shp")
     africa.plot(ax=ax_map, color='#F5F5DC', edgecolor='#CCCCCC', linewidth=0.5)
 except:
     print("Warning: Could not load Africa basemap, continuing without it")
