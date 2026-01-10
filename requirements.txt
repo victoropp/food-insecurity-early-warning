@@ -1,0 +1,61 @@
+# Core dependencies for Food Insecurity Early Warning System
+# Author: Victor Collins Oppon
+# MSc Data Science Dissertation, Middlesex University 2025
+
+# Data manipulation
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=12.0.0  # For parquet file support
+
+# Machine learning
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+imbalanced-learn>=0.11.0
+
+# Geospatial analysis
+geopandas>=0.13.0
+shapely>=2.0.0
+fiona>=1.9.0
+rtree>=1.0.0  # Spatial indexing
+
+# Advanced features
+hmmlearn>=0.3.0  # Hidden Markov Models
+pydmd>=0.4.0  # Dynamic Mode Decomposition
+statsmodels>=0.14.0  # Mixed-effects models
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
+folium>=0.14.0  # Interactive maps
+contextily>=1.3.0  # Basemaps
+
+# Model interpretation
+shap>=0.42.0
+
+# Progress bars and utilities
+tqdm>=4.65.0
+joblib>=1.3.0
+
+# Web data
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# Jupyter notebooks (optional, for interactive exploration)
+jupyter>=1.0.0
+jupyterlab>=4.0.0
+notebook>=7.0.0
+ipykernel>=6.25.0
+
+# Database (if using SQLite for intermediate storage)
+sqlalchemy>=2.0.0
+
+# Date handling
+python-dateutil>=2.8.2
+
+# Configuration
+pyyaml>=6.0
+
+# Testing (optional)
+pytest>=7.4.0
+pytest-cov>=4.1.0
