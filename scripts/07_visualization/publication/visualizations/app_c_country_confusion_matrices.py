@@ -19,7 +19,7 @@ import seaborn as sns
 from config import BASE_DIR
 
 # Directories
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 CASCADE_FILE = BASE_DIR / "RESULTS" / "cascade_optimized_production" / "cascade_optimized_predictions.csv"
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "appendices"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

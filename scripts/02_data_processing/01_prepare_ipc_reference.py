@@ -17,7 +17,7 @@ import re
 from config import BASE_DIR
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 IPC_FILE = BASE_DIR / 'FEWSNET IPC' / 'ipcFic_Africa_Current_Only.csv'
 
 # Output to district_level subfolder for traceability

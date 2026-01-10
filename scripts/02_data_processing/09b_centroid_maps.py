@@ -18,7 +18,7 @@ from datetime import datetime
 from config import BASE_DIR
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 FEATURES_FILE = BASE_DIR / 'data' / 'stage1_features.parquet'
 PRED_DIR = BASE_DIR / 'results' / 'district_level' / 'stage1_baseline'
 OUTPUT_DIR = BASE_DIR / 'figures' / 'stage1_centroid_maps'

@@ -33,7 +33,7 @@ warnings.filterwarnings('ignore')
 # CONFIGURATION
 # ============================================================================
 
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 ANALYSIS_DIR = BASE_DIR / "Dissertation Write Up" / "GEOGRAPHIC_HETEROGENEITY_ANALYSIS"
 GEODATA_DIR = Path(r"C:\GDELT_Africa_Extract\data")
 FIGURES_OUTPUT = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "ch05_discussion"

@@ -5,7 +5,7 @@ Keep only middlesex_logo.png
 import pathlib
 from config import BASE_DIR
 
-figures_dir = pathlib.Path(rstr(BASE_DIR))
+figures_dir = pathlib.Path(str(BASE_DIR))
 
 count = 0
 for f in figures_dir.rglob('*'):

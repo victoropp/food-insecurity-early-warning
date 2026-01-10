@@ -20,7 +20,7 @@ import matplotlib.dates as mdates
 from config import BASE_DIR
 
 # Directories
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 DATA_DIR = BASE_DIR / "RESULTS" / "stage2_features" / "phase2_features"
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "ch03_methods"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

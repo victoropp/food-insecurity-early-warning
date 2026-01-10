@@ -26,7 +26,7 @@ from adjustText import adjust_text
 from config import BASE_DIR
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 PRED_DIR = BASE_DIR / 'results' / 'district_level' / 'stage1_baseline'
 OUTPUT_DIR = BASE_DIR / 'figures' / 'stage2_crisis_onset'
 NE_FILE = BASE_DIR / 'data' / 'natural_earth' / 'ne_50m_admin_0_countries_africa.shp'

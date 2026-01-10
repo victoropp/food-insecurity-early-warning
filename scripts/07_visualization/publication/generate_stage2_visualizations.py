@@ -23,7 +23,7 @@ from config import BASE_DIR
 warnings.filterwarnings('ignore')
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 DATA_DIR = BASE_DIR / "data"
 OUTPUT_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION" / "stage2_figures"

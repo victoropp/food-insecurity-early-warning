@@ -19,7 +19,7 @@ from pathlib import Path
 from config import BASE_DIR
 
 # Directories
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS" / "cascade_optimized_production"
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "ch02_background"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

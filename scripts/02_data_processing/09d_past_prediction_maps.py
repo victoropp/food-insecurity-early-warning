@@ -21,7 +21,7 @@ from datetime import datetime
 from config import BASE_DIR
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 IPC_BOUNDARIES = BASE_DIR / 'data' / 'ipc_shapefiles' / 'ipc_africa_all_boundaries.geojson'
 PRED_DIR = BASE_DIR / 'results' / 'district_level' / 'stage1_baseline'
 OUTPUT_DIR = BASE_DIR / 'figures' / 'stage1_past_prediction'

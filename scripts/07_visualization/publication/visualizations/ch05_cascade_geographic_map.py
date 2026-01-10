@@ -21,7 +21,7 @@ from config import BASE_DIR
 warnings.filterwarnings('ignore')
 
 # Directories
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 CASCADE_DIR = BASE_DIR / "RESULTS" / "cascade_optimized_production"
 GEODATA_DIR = Path(r"C:\GDELT_Africa_Extract\data")
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "ch05_discussion"

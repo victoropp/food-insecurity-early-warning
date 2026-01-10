@@ -3,7 +3,7 @@ Test script to regenerate only Figures 3 and 4 with improved clarity
 """
 import sys
 from config import BASE_DIR
-sys.path.insert(0, rstr(BASE_DIR))
+sys.path.insert(0, str(BASE_DIR))
 
 from generate_stage2_visualizations import load_all_data, create_figure3_hmm_features, create_figure4_dmd_features
 import matplotlib.pyplot as plt

@@ -29,7 +29,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 
 # District pipeline I/O (district_level subfolders)
 DISTRICT_DATA_DIR = BASE_DIR / 'data' / 'district_level'

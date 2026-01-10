@@ -24,7 +24,7 @@ import matplotlib.patches as mpatches
 from sklearn.metrics import roc_curve, precision_recall_curve, auc
 
 # Paths - DISTRICT LEVEL
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 RESULTS_DIR = BASE_DIR / 'results' / 'district_level' / 'stage1_baseline'
 FIGURES_DIR = BASE_DIR / 'figures' / 'stage1_district_level'
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)

@@ -40,7 +40,7 @@ warnings.filterwarnings('ignore')
 # CONFIGURATION
 # ============================================================================
 
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 DATA_INV_DIR = BASE_DIR / "Dissertation Write Up" / "DATA_INVENTORIES"
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up"

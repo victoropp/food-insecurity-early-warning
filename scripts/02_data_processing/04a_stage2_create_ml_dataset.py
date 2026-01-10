@@ -18,7 +18,7 @@ from datetime import datetime
 from config import BASE_DIR
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 
 # District pipeline I/O
 DISTRICT_DATA_DIR = BASE_DIR / 'data' / 'district_level'

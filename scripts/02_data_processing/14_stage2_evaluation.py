@@ -39,7 +39,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 DATA_DIR = BASE_DIR / 'data'
 DISTRICT_DATA_DIR = DATA_DIR / 'district_level'
 RESULTS_DIR = BASE_DIR / 'results' / 'district_level'

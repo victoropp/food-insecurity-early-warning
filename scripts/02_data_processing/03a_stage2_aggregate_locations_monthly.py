@@ -26,7 +26,7 @@ import pyarrow.parquet as pq
 from config import BASE_DIR
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 
 # Input files (same as Stage 1)
 LOCATIONS_FILE = BASE_DIR / 'data' / 'african_gkg_locations_aligned.parquet'

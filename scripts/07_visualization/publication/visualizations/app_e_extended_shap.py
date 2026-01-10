@@ -20,7 +20,7 @@ from config import BASE_DIR
 warnings.filterwarnings('ignore')
 
 # Directories
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 SHAP_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION" / "academic_journal_submission" / "analysis_results"
 STAGE2_DIR = BASE_DIR / "RESULTS" / "stage2_models" / "xgboost" / "advanced_with_ar_optimized"
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "appendices"

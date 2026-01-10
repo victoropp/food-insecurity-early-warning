@@ -23,7 +23,7 @@ from config import BASE_DIR
 warnings.filterwarnings('ignore')
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 GADM_DIR = BASE_DIR / 'data' / 'gadm'
 RESULTS_DIR = BASE_DIR / 'results' / 'district_level' / 'stage1_baseline'
 FIGURES_DIR = BASE_DIR / 'figures' / 'stage1_cartographic_v5'

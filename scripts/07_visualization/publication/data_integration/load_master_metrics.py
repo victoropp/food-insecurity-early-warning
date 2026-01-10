@@ -23,7 +23,7 @@ from config import BASE_DIR
 warnings.filterwarnings('ignore')
 
 # Directory paths
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 DATA_DIR = BASE_DIR / "Dissertation Write Up" / "DATA_INVENTORIES"
 RESULTS_DIR = BASE_DIR / "RESULTS"
 

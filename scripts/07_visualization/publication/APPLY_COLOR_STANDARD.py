@@ -22,7 +22,7 @@ STANDARD_COLORS = {
 }
 
 # Files to update
-VISUALIZATION_DIR = Path(rstr(BASE_DIR))
+VISUALIZATION_DIR = Path(str(BASE_DIR))
 
 FILES_TO_UPDATE = [
     'ch04_key_saves_map.py',

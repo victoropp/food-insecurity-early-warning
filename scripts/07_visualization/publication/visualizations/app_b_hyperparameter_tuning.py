@@ -19,7 +19,7 @@ from pathlib import Path
 from config import BASE_DIR
 
 # Directories
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 GRID_FILE = BASE_DIR / "RESULTS" / "stage2_models" / "xgboost" / "advanced_with_ar_optimized" / "grid_search_results.csv"
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "appendices"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

@@ -21,7 +21,7 @@ from datetime import datetime
 from config import BASE_DIR
 
 # Base directory
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 SCRIPTS_DIR = BASE_DIR / 'Scripts' / 'district_pipeline'
 
 # Pipeline steps in order (outputs go to district_level subfolders)

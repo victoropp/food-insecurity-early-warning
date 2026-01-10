@@ -14,8 +14,8 @@ import json
 from pathlib import Path
 
 # Direct paths
-INPUT_DIR = Path(rstr(BASE_DIR))
-OUTPUT_DIR = Path(rstr(BASE_DIR))
+INPUT_DIR = Path(str(BASE_DIR))
+OUTPUT_DIR = Path(str(BASE_DIR))
 
 # Colors
 COLORS = {

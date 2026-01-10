@@ -762,16 +762,16 @@ if __name__ == '__main__':
     print("="*80)
 
     # Base figures directory
-    base_figures_dir = Path(rstr(BASE_DIR))
+    base_figures_dir = Path(str(BASE_DIR))
     base_figures_dir.mkdir(parents=True, exist_ok=True)
     print(f"\nSaving all figures to: {base_figures_dir}\n")
 
     # Model 1: Ablation Best (Ratio + Location)
-    model1_dir = Path(rstr(BASE_DIR))
+    model1_dir = Path(str(BASE_DIR))
     generate_all_visualizations(model1_dir, "Ablation Model (Ratio + Location Features)", base_figures_dir)
 
     # Model 2: Advanced XGBoost (All Features)
-    model2_dir = Path(rstr(BASE_DIR))
+    model2_dir = Path(str(BASE_DIR))
     generate_all_visualizations(model2_dir, "Advanced Model (All Features)", base_figures_dir)
 
     print("\n" + "="*80)

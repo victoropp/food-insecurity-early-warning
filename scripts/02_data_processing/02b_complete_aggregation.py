@@ -16,7 +16,7 @@ import sys
 from config import BASE_DIR
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 ARTICLES_FILE = BASE_DIR / 'data' / 'african_gkg_articles.csv'
 DISTRICT_DATA_DIR = BASE_DIR / 'data' / 'district_level'
 LOOKUP_FILE = DISTRICT_DATA_DIR / 'temp_articles_district_lookup.parquet'

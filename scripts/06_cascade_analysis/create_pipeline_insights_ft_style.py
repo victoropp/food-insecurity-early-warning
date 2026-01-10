@@ -24,7 +24,7 @@ from config import BASE_DIR
 warnings.filterwarnings('ignore')
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 DATA_DIR = BASE_DIR / "DATA"
 FIGURES_DIR = BASE_DIR / "FIGURES" / "pipeline_insights"

@@ -55,7 +55,7 @@ FT_COLORS = {
 }
 
 # Directory structure
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 OUTPUT_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION" / "academic_journal_submission" / "interpretability"
 ANALYSIS_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION" / "academic_journal_submission" / "analysis_results"

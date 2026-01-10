@@ -15,8 +15,8 @@ from pathlib import Path
 from sklearn.metrics import roc_auc_score, average_precision_score, f1_score, precision_score, recall_score, brier_score_loss
 
 # Direct paths
-INPUT_DIR = Path(rstr(BASE_DIR))
-OUTPUT_DIR = Path(rstr(BASE_DIR))
+INPUT_DIR = Path(str(BASE_DIR))
+OUTPUT_DIR = Path(str(BASE_DIR))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Colors

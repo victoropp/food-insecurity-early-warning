@@ -38,7 +38,7 @@ from config import BASE_DIR
 AGGREGATION_MONTHS = 4
 
 # Paths
-BASE_DIR = Path(rstr(BASE_DIR.parent.parent.parent))
+BASE_DIR = Path(str(BASE_DIR.parent.parent.parent))
 
 # Input files (original locations)
 ARTICLES_FILE = BASE_DIR / 'data' / 'african_gkg_articles.csv'

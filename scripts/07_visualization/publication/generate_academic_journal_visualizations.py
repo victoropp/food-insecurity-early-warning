@@ -39,7 +39,7 @@ warnings.filterwarnings('ignore')
 # PATHS AND CONFIGURATION
 # =============================================================================
 
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 DATA_DIR = BASE_DIR / "data"
 OUTPUT_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION" / "academic_journal_submission"

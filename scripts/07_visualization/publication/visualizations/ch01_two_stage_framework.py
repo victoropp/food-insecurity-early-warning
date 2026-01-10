@@ -22,7 +22,7 @@ from pathlib import Path
 from config import BASE_DIR
 
 # Directories
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 DATA_DIR = BASE_DIR / "Dissertation Write Up" / "DATA_INVENTORIES"
 OUTPUT_DIR = BASE_DIR / "Dissertation Write Up" / "LATEX_DISSERTATION" / "figures" / "ch01_introduction"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

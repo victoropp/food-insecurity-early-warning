@@ -73,7 +73,7 @@ KEY_SAVE_COLORS = {
 }
 
 # Directory structure
-BASE_DIR = Path(rstr(BASE_DIR))
+BASE_DIR = Path(str(BASE_DIR))
 RESULTS_DIR = BASE_DIR / "RESULTS"
 OUTPUT_DIR = BASE_DIR / "VISUALIZATIONS_PUBLICATION"
 IPC_SHAPEFILE_DIR = Path(r"C:\GDELT_Africa_Extract\Data\ipc_shapefiles")
