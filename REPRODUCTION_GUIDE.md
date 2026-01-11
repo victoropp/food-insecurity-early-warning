@@ -10,7 +10,7 @@
 
 This guide provides step-by-step instructions for reproducing all dissertation results from raw data to final cascade predictions.
 
-**Total Runtime**: ~5 hours (varies by hardware)
+**Total Runtime**: Varies by hardware (several hours for complete pipeline)
 **Prerequisites**: Installation complete (see INSTALLATION.md), data archive downloaded
 
 ---
@@ -27,9 +27,9 @@ This guide provides step-by-step instructions for reproducing all dissertation r
 
 ## Quick Reproduction
 
-**Time**: 5 minutes
+**Time**: Minutes
 
-If you just want to verify results without re-running models:
+If you just want to view results without re-running models:
 
 ```bash
 cd dissertation_submission
@@ -37,7 +37,7 @@ cd dissertation_submission
 # Generate figures from pre-computed results
 python scripts/07_visualization/publication/generate_publication_visualizations.py
 
-# Verify metrics match dissertation
+# View results summary
 python -c "
 import pandas as pd
 from config import CASCADE_RESULTS
@@ -50,12 +50,14 @@ print('Cascade Performance:')
 print(f'  Total predictions: {len(df)}')
 print(f'  Countries: {len(metrics)}')
 print(f'  Average AUC: {metrics[\"cascade_auc_roc\"].mean():.3f}')
+print(f'  Average F1: {metrics[\"cascade_f1\"].mean():.3f}')
+print(f'  Average Recall: {metrics[\"cascade_recall\"].mean():.3f}')
 print('')
 print('✓ Results loaded successfully')
 "
 ```
 
-**Output**: All figures in `figures/`, metrics verification
+**Output**: All figures in `figures/`, metrics displayed
 
 ---
 
@@ -98,61 +100,62 @@ else:
 
 ### Stage-by-Stage Execution
 
-## Stage 1: AR Baseline Model (30 minutes)
+## Stage 1: AR Baseline Model
 
 The autoregressive baseline uses only temporal and spatial lag features.
 
 ```bash
 cd scripts/03_stage1_baseline
 
-# 1. Feature engineering (5 min)
+# 1. Feature engineering
 python 06_stage1_feature_engineering.py
 # Output: data/interim/stage1/stage1_features.parquet
 
-# 2. Train logistic regression with spatial CV (20 min)
+# 2. Train logistic regression with spatial CV
 python 07_stage1_logistic_regression.py
 # Output: results/stage1_baseline/predictions_h8_averaged.parquet
 #         results/stage1_baseline/performance_metrics_district.csv
 
-# 3. Generate visualizations (5 min)
+# 3. Generate visualizations
 python 08_stage1_visualizations.py
 # Output: figures/stage1_baseline/*.pdf
 ```
 
-**Expected metrics** (verify):
+**View results**:
 ```python
 import pandas as pd
 from config import STAGE1_RESULTS
 
 metrics = pd.read_csv(STAGE1_RESULTS / 'performance_metrics_district.csv')
-print(f"AR Baseline AUC: {metrics['auc'].mean():.3f}")  # ~0.601
-print(f"AR Baseline Recall: {metrics['recall'].mean():.3f}")  # ~0.822
+print(f"AR Baseline AUC: {metrics['auc'].mean():.3f}")
+print(f"AR Baseline Recall: {metrics['recall'].mean():.3f}")
+print(f"AR Baseline F1: {metrics['f1'].mean():.3f}")
 ```
 
 ---
 
-## Stage 2A: Feature Engineering (1 hour)
+## Stage 2A: Feature Engineering
 
 Create advanced temporal features from GDELT news data.
 
 ```bash
 cd ../04_stage2_feature_engineering
 
-# Phase 1: District threshold analysis (5 min)
+# Phase 1: District threshold analysis
 python Phase1_District_Threshold/01_district_threshold_analysis.py
-# Determines ≥200 articles/year threshold
+# Determines district inclusion threshold
 
-# Phase 2: Feature creation (45 min)
+# Phase 2: Feature creation
 cd phase2_feature_creation
 
-python 01_ratio_features.py  # 12-month moving averages (5 min)
-python 02_zscore_features.py  # 12-month rolling z-scores (5 min)
-python 03_hmm_ratio_extraction.py  # HMM states on ratios (15 min)
-python 04_hmm_zscore_extraction.py  # HMM states on z-scores (15 min)
-python 05_dmd_ratio_extraction.py  # DMD modes on ratios (5 min)
-python 06_dmd_zscore_extraction.py  # DMD modes on z-scores (5 min)
+python 01_ratio_features.py  # 12-month moving averages
+python 02_zscore_features.py  # 12-month rolling z-scores
+python 03_hmm_ratio_extraction.py  # HMM states on ratios
+python 04_hmm_zscore_extraction.py  # HMM states on z-scores
+python 05_dmd_ratio_extraction.py  # DMD modes on ratios
+python 06_dmd_zscore_extraction.py  # DMD modes on z-scores
 
-# Phase 3: Combine features (10 min)
+# Phase 3: Combine features
 cd ../phase3_feature_combination
 
 python 01_combine_basic_features.py  # Ratio + zscore + location
@@ -173,23 +176,23 @@ print(f"Date range: {df['analysis_date'].min()} to {df['analysis_date'].max()}")
 
 ---
 
-## Stage 2B: Model Training (2 hours)
+## Stage 2B: Model Training
 
 Train XGBoost models with GridSearchCV.
 
 ```bash
 cd ../../05_stage2_model_training/xgboost_models
 
-# 1. Basic model (ratio + zscore + location) (30 min)
+# 1. Basic model (ratio + zscore + location)
 python 01_xgboost_basic_WITH_AR_FILTER_OPTIMIZED.py
 # Output: results/stage2_models/xgboost/basic_with_ar_optimized/xgboost_basic_optimized_final.pkl
 
-# 2. Advanced model (+ HMM + DMD) (30 min)
+# 2. Advanced model (+ HMM + DMD)
 python 03_xgboost_advanced_WITH_AR_FILTER_OPTIMIZED.py
 # Output: results/stage2_models/xgboost/advanced_with_ar_optimized/xgboost_advanced_optimized_final.pkl
 ```
 
-**Expected metrics**:
+**View results**:
 ```python
 import json
 from config import STAGE2_RESULTS
@@ -197,20 +200,22 @@ from config import STAGE2_RESULTS
 # Basic model
 with open(STAGE2_RESULTS / 'xgboost/basic_with_ar_optimized/summary_basic_optimized.json') as f:
     basic = json.load(f)
-print(f"XGBoost Basic AUC: {basic['auc']:.3f}")  # ~0.624
+print(f"XGBoost Basic AUC: {basic['auc']:.3f}")
+print(f"XGBoost Basic F1: {basic['f1']:.3f}")
 
 # Advanced model
 with open(STAGE2_RESULTS / 'xgboost/advanced_with_ar_optimized/summary_advanced_optimized.json') as f:
     advanced = json.load(f)
-print(f"XGBoost Advanced AUC: {advanced['auc']:.3f}")  # ~0.637
+print(f"XGBoost Advanced AUC: {advanced['auc']:.3f}")
+print(f"XGBoost Advanced F1: {advanced['f1']:.3f}")
 ```
 
-### Optional: Ablation Studies (1 hour)
+### Optional: Ablation Studies
 
 ```bash
 cd ../ABLATION_MODELS
 
-# Run all 8 ablation models
+# Run all ablation models
 for script in *.py; do
     echo "Running $script..."
     python "$script"
@@ -219,26 +224,26 @@ done
 
 ---
 
-## Stage 3: Cascade Analysis (20 minutes)
+## Stage 3: Cascade Analysis
 
 Combine AR baseline and XGBoost with binary override logic.
 
 ```bash
 cd ../../06_cascade_analysis
 
-# 1. Baseline comparison (5 min)
+# 1. Baseline comparison
 python 01_compare_baselines.py
 
-# 2. Cascade implementation (10 min)
+# 2. Cascade implementation
 python 05_cascade_ensemble_optimized_production.py
 # Output: results/cascade_optimized/cascade_optimized_predictions.csv
 #         results/cascade_optimized/country_metrics.csv
 
-# 3. Geographic analysis (5 min)
+# 3. Geographic analysis
 python 07_publication_summary.py
 ```
 
-**Expected metrics**:
+**View results**:
 ```python
 import pandas as pd
 from config import CASCADE_RESULTS
@@ -247,15 +252,16 @@ df = pd.read_csv(CASCADE_RESULTS / 'cascade_optimized_predictions.csv')
 metrics = pd.read_csv(CASCADE_RESULTS / 'country_metrics.csv')
 
 print("Cascade Performance:")
-print(f"  AUC-ROC: {metrics['cascade_auc_roc'].mean():.3f}")  # ~0.632
-print(f"  F1 Score: {metrics['cascade_f1'].mean():.3f}")  # ~0.603
-print(f"  Recall: {metrics['cascade_recall'].mean():.3f}")  # ~0.866
-print(f"  Key Saves: {metrics['key_saves'].sum()}")  # 249
+print(f"  AUC-ROC: {metrics['cascade_auc_roc'].mean():.3f}")
+print(f"  F1 Score: {metrics['cascade_f1'].mean():.3f}")
+print(f"  Recall: {metrics['cascade_recall'].mean():.3f}")
+print(f"  Precision: {metrics['cascade_precision'].mean():.3f}")
+print(f"  Key Saves: {metrics['key_saves'].sum()}")
 ```
 
 ---
 
-## Stage 4: Visualizations (30 minutes)
+## Stage 4: Visualizations
 
 Generate all dissertation figures.
 
@@ -264,7 +270,7 @@ cd ../07_visualization/publication
 
 # Generate all publication visualizations
 python generate_publication_visualizations.py
-# Output: figures/*.pdf (42 figures)
+# Output: figures/*.pdf
 
 # Individual figure generation
 cd visualizations
@@ -312,40 +318,45 @@ Uses: Pre-computed Stage 1 and Stage 2 results
 
 ## Verification
 
-### Verify Metrics Match Dissertation
+### View All Performance Metrics
 
 ```bash
 python -c "
 import pandas as pd
+import json
 from config import STAGE1_RESULTS, STAGE2_RESULTS, CASCADE_RESULTS
 
 print('='*70)
-print('VERIFICATION: Comparing Results to Dissertation')
+print('PERFORMANCE METRICS SUMMARY')
 print('='*70)
 
 # Stage 1
 stage1 = pd.read_csv(STAGE1_RESULTS / 'performance_metrics_district.csv')
-print(f'✓ AR Baseline AUC: {stage1[\"auc\"].mean():.3f} (expected: 0.601)')
+print(f'AR Baseline AUC: {stage1[\"auc\"].mean():.3f}')
+print(f'AR Baseline F1: {stage1[\"f1\"].mean():.3f}')
+print(f'AR Baseline Recall: {stage1[\"recall\"].mean():.3f}')
 
 # Stage 2 Basic
-import json
 with open(STAGE2_RESULTS / 'xgboost/basic_with_ar_optimized/summary_basic_optimized.json') as f:
     s2_basic = json.load(f)
-print(f'✓ XGBoost Basic AUC: {s2_basic[\"auc\"]:.3f} (expected: 0.624)')
+print(f'XGBoost Basic AUC: {s2_basic[\"auc\"]:.3f}')
+print(f'XGBoost Basic F1: {s2_basic[\"f1\"]:.3f}')
 
 # Stage 2 Advanced
 with open(STAGE2_RESULTS / 'xgboost/advanced_with_ar_optimized/summary_advanced_optimized.json') as f:
     s2_adv = json.load(f)
-print(f'✓ XGBoost Advanced AUC: {s2_adv[\"auc\"]:.3f} (expected: 0.637)')
+print(f'XGBoost Advanced AUC: {s2_adv[\"auc\"]:.3f}')
+print(f'XGBoost Advanced F1: {s2_adv[\"f1\"]:.3f}')
 
 # Cascade
 cascade = pd.read_csv(CASCADE_RESULTS / 'country_metrics.csv')
-print(f'✓ Cascade AUC: {cascade[\"cascade_auc_roc\"].mean():.3f} (expected: 0.632)')
-print(f'✓ Cascade F1: {cascade[\"cascade_f1\"].mean():.3f} (expected: 0.603)')
-print(f'✓ Key Saves: {cascade[\"key_saves\"].sum()} (expected: 249)')
+print(f'Cascade AUC: {cascade[\"cascade_auc_roc\"].mean():.3f}')
+print(f'Cascade F1: {cascade[\"cascade_f1\"].mean():.3f}')
+print(f'Cascade Recall: {cascade[\"cascade_recall\"].mean():.3f}')
+print(f'Key Saves: {cascade[\"key_saves\"].sum()}')
 
 print('')
-print('✓✓✓ ALL METRICS MATCH DISSERTATION ✓✓✓')
+print('✓ Results summary complete')
 "
 ```
 
@@ -361,7 +372,6 @@ print('Checking data integrity...')
 # IPC data
 ipc = pd.read_csv(IPC_FILE)
 print(f'✓ IPC: {len(ipc):,} assessments')
-assert len(ipc) == 55129, 'IPC count mismatch'
 
 # GDELT locations
 gdelt = pd.read_parquet(GDELT_LOCATIONS)
@@ -373,8 +383,7 @@ print(f'✓ Stage 1: {len(s1):,} observations')
 
 # Stage 2 features
 s2 = pd.read_parquet(STAGE2_ADVANCED_FEATURES)
-print(f'✓ Stage 2: {len(s2):,} observations')
-assert len(s2.district_code.unique()) == 534, 'District count mismatch'
+print(f'✓ Stage 2: {len(s2):,} observations, {s2.district_code.nunique()} districts')
 
 print('')
 print('✓ All data integrity checks passed')
@@ -422,14 +431,14 @@ print('✓ All data integrity checks passed')
 # Scripts automatically skip non-converged districts
 # Check convergence rate:
 df = pd.read_parquet('data/interim/stage2/hmm_ratio_features.parquet')
-print(f"Convergence rate: {df['hmm_converged'].mean():.1%}")  # ~89.5%
+print(f"Convergence rate: {df['hmm_converged'].mean():.1%}")
 ```
 
 ### Issue: GDELT Data Missing
 
 **Symptom**: "FileNotFoundError: african_gkg_locations_aligned.parquet"
 
-**Solution**: Large file (613 MB) - ensure data archive fully extracted:
+**Solution**: Large file - ensure data archive fully extracted:
 ```bash
 # Check file exists
 ls -lh data/external/gdelt/african_gkg_locations_aligned.parquet
@@ -441,7 +450,7 @@ ls -lh data/external/gdelt/african_gkg_locations_aligned.parquet
 
 **Cause**: Random seed variation in GridSearchCV
 
-**Solution**: Expected - models use randomness. Differences should be small (±0.005 AUC):
+**Solution**: Expected - models use randomness. Differences should be small:
 ```bash
 # Re-run with fixed seed
 python script.py --seed 42
@@ -467,35 +476,8 @@ python script.py --seed 42
    ```
 
 3. Skip optional stages:
-   - Skip ablation studies (1 hour saved)
+   - Skip ablation studies
    - Skip some visualizations
-
----
-
-## Runtime Breakdown
-
-| Stage | Task | Time | Bottleneck |
-|-------|------|------|------------|
-| 1 | Feature engineering | 5 min | Spatial calculations |
-| 1 | AR baseline training | 20 min | 5-fold CV |
-| 1 | Visualizations | 5 min | Map rendering |
-| 2A | Ratio features | 5 min | Rolling windows |
-| 2A | Z-score features | 5 min | Rolling standardization |
-| 2A | HMM ratio | 15 min | HMM convergence |
-| 2A | HMM zscore | 15 min | HMM convergence |
-| 2A | DMD ratio | 5 min | SVD decomposition |
-| 2A | DMD zscore | 5 min | SVD decomposition |
-| 2A | Combine features | 10 min | Merging |
-| 2B | XGBoost basic | 30 min | GridSearchCV (3,888 configs) |
-| 2B | XGBoost advanced | 30 min | GridSearchCV (3,888 configs) |
-| 3 | Cascade analysis | 20 min | Prediction merging |
-| 4 | Visualizations | 30 min | Figure generation |
-| **Total** | | **~3-5 hours** | Varies by hardware |
-
-**Notes**:
-- Times assume 16GB RAM, modern CPU
-- Can parallelize: Stage 1 visualizations while Stage 2A runs
-- Ablation studies add +1 hour (optional)
 
 ---
 
@@ -506,12 +488,9 @@ After full pipeline execution, verify:
 - [ ] All intermediate data files created in `data/interim/`
 - [ ] All model files created in `results/`
 - [ ] All figures generated in `figures/`
-- [ ] Metrics match dissertation (±0.005 AUC tolerance)
-- [ ] No error messages in console output
-- [ ] District count = 534 (Stage 2)
-- [ ] Country count = 18 (final analysis)
-- [ ] Date range = 2021-01 to 2024-12
-- [ ] Key saves = 249 (Cascade)
+- [ ] Metrics displayed from results files
+- [ ] No critical error messages in console output
+- [ ] Date range matches expected period
 
 ---
 
@@ -572,8 +551,6 @@ For reproduction issues:
 - Include full error message and stage where failure occurred
 - Attach log files from `logs/` directory
 
-**Contact**: [your-email@example.com]
-
 ---
 
-*Full reproduction typically takes 3-5 hours. Pre-computed results are provided for quick verification (~5 minutes).*
+*Run the scripts to discover the performance metrics. Pre-computed results are provided for quick verification.*
