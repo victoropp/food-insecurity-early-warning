@@ -1,0 +1,59 @@
+{
+  "model_name": "pooled_zscore_hmm_dmd_with_ar_optimized",
+  "feature_type": "zscore_hmm_dmd",
+  "filter_variant": "WITH_AR_FILTER",
+  "optimizations": {
+    "feature_selection": "None - all features used",
+    "class_weighting": 10,
+    "random_effects": "random intercepts + random slopes for key signals"
+  },
+  "timestamp": "2026-01-02 07:40:18.581206",
+  "n_observations": 6553,
+  "n_features_original": 23,
+  "n_features_selected": 23,
+  "selected_features": ["conflict_zscore", "displacement_zscore", "economic_zscore", "food_security_zscore", "governance_zscore", "health_zscore", "humanitarian_zscore", "other_zscore", "weather_zscore", "hmm_ratio_crisis_prob", "hmm_ratio_transition_risk", "hmm_ratio_entropy", "hmm_zscore_crisis_prob", "hmm_zscore_transition_risk", "hmm_zscore_entropy", "dmd_ratio_crisis_growth_rate", "dmd_ratio_crisis_instability", "dmd_ratio_crisis_frequency", "dmd_ratio_crisis_amplitude", "dmd_zscore_crisis_growth_rate", "dmd_zscore_crisis_instability", "dmd_zscore_crisis_frequency", "dmd_zscore_crisis_amplitude"],
+  "feature_breakdown": {
+    "n_zscore": 9,
+    "n_hmm": 6,
+    "n_dmd": 8
+  },
+  "class_balance": {
+    "n_crisis": 393,
+    "n_no_crisis": 6160,
+    "prevalence": 0.06,
+    "imbalance_ratio": 15.6743,
+    "class_weight_applied": 10
+  },
+  "threshold_optimization": {
+    "method": "Youden's Index (primary), F1-max, High-recall (90% target)",
+    "mean_youden_threshold": 0.266,
+    "mean_f1_threshold": 0.27,
+    "mean_high_recall_threshold": 0.17
+  },
+  "overall_metrics": {
+    "overall_auc_roc": 0.5857,
+    "overall_pr_auc": null,
+    "mean_fold_auc": 0.5959,
+    "std_fold_auc": 0.0647,
+    "mean_pr_auc": "NaN",
+    "std_pr_auc": "NA",
+    "mean_precision_youden": 0.1174,
+    "mean_recall_youden": 0.5647,
+    "mean_f1_youden": 0.1744,
+    "mean_specificity_youden": 0.5464,
+    "mean_accuracy_youden": 0.5553,
+    "mean_balanced_accuracy": 0.5556,
+    "mean_youden_index": 0.1111,
+    "mean_brier_score": 0.281,
+    "mean_log_loss": 0.9656
+  },
+  "random_effects_selection": {
+    "level_used": "country",
+    "n_groups": 13,
+    "key_signals": ["conflict_zscore", "food_security_zscore"],
+    "min_obs_per_group": 10,
+    "coverage_threshold": 0.5
+  },
+  "n_folds": 5,
+  "n_countries": 13
+}

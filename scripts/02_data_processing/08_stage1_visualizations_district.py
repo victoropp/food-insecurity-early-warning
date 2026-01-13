@@ -3,7 +3,7 @@ Stage 1: Publication-Grade Visualizations and Analysis - DISTRICT LEVEL
 Comprehensive visual analysis of AR baseline performance with storytelling approach
 Uses official IPC color schemes and cartographic maps
 
-Author: Adapted for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

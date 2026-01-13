@@ -7,7 +7,7 @@ KEY CORRECTIONS:
 2. Spatial neighbors based on district-level coordinates
 3. Temporal lag within same district (not LHZ)
 
-Author: Corrected for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

@@ -1,0 +1,73 @@
+{
+  "model": "ablation_ratio_zscore_location_optimized",
+  "model_type": "ABLATION - Ratio + Zscore + Location (NO HMM, NO DMD)",
+  "description": "Ablation Model 5: Ratio + Zscore + Location (NO HMM, NO DMD) with GridSearchCV optimization",
+  "filter": "WITH_AR_FILTER",
+  "enhancement": "GridSearchCV with Stratified Spatial CV",
+  "timestamp": "2026-01-02T01:24:15.496691",
+  "data": {
+    "total_observations": 6553,
+    "crisis_events": 393,
+    "non_crisis_events": 6160,
+    "crisis_rate": 0.059972531664886315,
+    "imbalance_ratio": 15.674300254452927,
+    "countries": 13,
+    "districts": 947
+  },
+  "features": {
+    "total": 21,
+    "ratio": 9,
+    "zscore": 9,
+    "hmm": 0,
+    "dmd": 0,
+    "location": 3,
+    "excluded": "HMM, DMD"
+  },
+  "hyperparameter_tuning": {
+    "method": "GridSearchCV with Stratified Spatial CV",
+    "scoring": "recall",
+    "best_params": {
+      "colsample_bytree": 0.6,
+      "gamma": 0.5,
+      "learning_rate": 0.01,
+      "max_depth": 5,
+      "min_child_weight": 5,
+      "n_estimators": 200,
+      "reg_alpha": 0,
+      "reg_lambda": 2,
+      "subsample": 0.8
+    },
+    "best_cv_score": 0.7001725852477308
+  },
+  "cv_performance": {
+    "auc_roc_mean": 0.6964256303051407,
+    "auc_roc_std": 0.17009971124782064,
+    "pr_auc_mean": 0.22548404981256068,
+    "pr_auc_std": 0.11155405018944803,
+    "brier_score_mean": 0.1272415116360221,
+    "log_loss_mean": 0.42320758408743975,
+    "youden": {
+      "precision": 0.16159335429042082,
+      "recall": 0.5747878640251768,
+      "f1": 0.2334561860820566,
+      "specificity": 0.7918633565335156
+    },
+    "high_recall": {
+      "precision": 0.06184269057732674,
+      "recall": 1.0,
+      "f1": 0.11611475852981785
+    }
+  },
+  "top_features": {
+    "country_data_density": 0.14685527980327606,
+    "country_baseline_conflict": 0.13187479972839355,
+    "country_baseline_food_security": 0.09086387604475021,
+    "other_ratio": 0.0466696135699749,
+    "conflict_zscore": 0.04218997061252594,
+    "health_ratio": 0.040523894131183624,
+    "food_security_zscore": 0.036684151738882065,
+    "food_security_ratio": 0.036541808396577835,
+    "displacement_ratio": 0.036466218531131744,
+    "weather_ratio": 0.03468412905931473
+  }
+}

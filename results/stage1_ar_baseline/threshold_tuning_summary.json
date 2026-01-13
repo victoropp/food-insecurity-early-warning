@@ -1,0 +1,158 @@
+[
+  {
+    "horizon": 4,
+    "default_threshold": 0.5,
+    "optimal_threshold": 0.6539228325500732,
+    "optimal_strategy": "balanced_constrained",
+    "constraint_met": true,
+    "min_constraint": 0.6,
+    "balanced_constrained": {
+      "threshold": 0.6539228325500732,
+      "precision": 0.7617981123020316,
+      "recall": 0.7617981123020316,
+      "min_constraint": 0.6,
+      "constraint_met": true
+    },
+    "default_metrics": {
+      "precision": 0.7617981123020316,
+      "recall": 0.7617981123020316,
+      "f1": 0.7617981123020318,
+      "false_positives": 1489,
+      "false_negatives": 1489
+    },
+    "optimal_metrics": {
+      "precision": 0.7617981123020316,
+      "recall": 0.7617981123020316,
+      "f1": 0.7617981123020318,
+      "false_positives": 1489,
+      "false_negatives": 1489
+    },
+    "f1_optimal": {
+      "threshold": 0.6473075926020437,
+      "f1": 0.7627335142402765,
+      "precision": 0.7612749003984064,
+      "recall": 0.7641977283634619
+    },
+    "gmean_optimal": {
+      "threshold": 0.6473075926020437,
+      "gmean": 0.7627349143343203,
+      "precision": 0.7612749003984064,
+      "recall": 0.7641977283634619
+    },
+    "youden_optimal": {
+      "threshold": 0.5214411063040747,
+      "youden_j": 0.6854336521146756,
+      "tpr": 0.8035514317709167,
+      "fpr": 0.11811777965624119
+    },
+    "balanced": {
+      "threshold": 0.6539228325500732,
+      "precision": 0.7617981123020316,
+      "recall": 0.7617981123020316
+    }
+  },
+  {
+    "horizon": 8,
+    "default_threshold": 0.5,
+    "optimal_threshold": 0.6294609210344307,
+    "optimal_strategy": "balanced_constrained",
+    "constraint_met": true,
+    "min_constraint": 0.6,
+    "balanced_constrained": {
+      "threshold": 0.6294609210344307,
+      "precision": 0.7318677189026682,
+      "recall": 0.7318677189026682,
+      "min_constraint": 0.6,
+      "constraint_met": true
+    },
+    "default_metrics": {
+      "precision": 0.7318677189026682,
+      "recall": 0.7318677189026682,
+      "f1": 0.7318677189026683,
+      "false_positives": 1427,
+      "false_negatives": 1427
+    },
+    "optimal_metrics": {
+      "precision": 0.7318677189026682,
+      "recall": 0.7318677189026682,
+      "f1": 0.7318677189026683,
+      "false_positives": 1427,
+      "false_negatives": 1427
+    },
+    "f1_optimal": {
+      "threshold": 0.568068757570658,
+      "f1": 0.7346604853604699,
+      "precision": 0.7115689381933439,
+      "recall": 0.7593010146561443
+    },
+    "gmean_optimal": {
+      "threshold": 0.568068757570658,
+      "gmean": 0.7350476289112164,
+      "precision": 0.7115689381933439,
+      "recall": 0.7593010146561443
+    },
+    "youden_optimal": {
+      "threshold": 0.4468080093750618,
+      "youden_j": 0.6582989013992395,
+      "tpr": 0.8431040962044344,
+      "fpr": 0.1848051948051948
+    },
+    "balanced": {
+      "threshold": 0.6294609210344307,
+      "precision": 0.7318677189026682,
+      "recall": 0.7318677189026682
+    }
+  },
+  {
+    "horizon": 12,
+    "default_threshold": 0.5,
+    "optimal_threshold": 0.6315949301019201,
+    "optimal_strategy": "balanced_constrained",
+    "constraint_met": true,
+    "min_constraint": 0.6,
+    "balanced_constrained": {
+      "threshold": 0.6315949301019201,
+      "precision": 0.687324551932628,
+      "recall": 0.6871761658031088,
+      "min_constraint": 0.6,
+      "constraint_met": true
+    },
+    "default_metrics": {
+      "precision": 0.687324551932628,
+      "recall": 0.6871761658031088,
+      "f1": 0.6872503508582531,
+      "false_positives": 1448,
+      "false_negatives": 1449
+    },
+    "optimal_metrics": {
+      "precision": 0.687324551932628,
+      "recall": 0.6871761658031088,
+      "f1": 0.6872503508582531,
+      "false_positives": 1448,
+      "false_negatives": 1449
+    },
+    "f1_optimal": {
+      "threshold": 0.500851790761741,
+      "f1": 0.699588477317147,
+      "precision": 0.6171617161716172,
+      "recall": 0.8074265975820379
+    },
+    "gmean_optimal": {
+      "threshold": 0.4867562292830151,
+      "gmean": 0.7074429682155293,
+      "precision": 0.6067005398539219,
+      "recall": 0.8249136442141624
+    },
+    "youden_optimal": {
+      "threshold": 0.4817561009618436,
+      "youden_j": 0.6388952181784131,
+      "tpr": 0.8303108808290155,
+      "fpr": 0.19141566265060242
+    },
+    "balanced": {
+      "threshold": 0.6315949301019201,
+      "precision": 0.687324551932628,
+      "recall": 0.6871761658031088
+    }
+  }
+]

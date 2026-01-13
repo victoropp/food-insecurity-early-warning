@@ -8,7 +8,7 @@ AR Failure = y_true=1 (actual crisis) AND y_pred=0 (predicted no crisis)
 
 UPDATED: Now uses optimal balanced threshold (P=R >= 0.6) instead of default 0.5
 
-Author: Claude
+Author: Victor Collins Oppon
 Date: 2025-11-30, Updated 2025-12-02
 """
 

@@ -4,7 +4,7 @@
 Visualizes predictions using official IPC district boundaries from HDX/FEWS NET.
 Matches predictions to IPC boundaries using spatial joins on centroids.
 
-Author: Claude
+Author: Victor Collins Oppon
 Date: 2025-11-30
 """
 

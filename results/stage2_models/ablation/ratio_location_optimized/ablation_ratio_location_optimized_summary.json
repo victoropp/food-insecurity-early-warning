@@ -1,0 +1,73 @@
+{
+  "model": "ablation_ratio_location_optimized",
+  "model_type": "ABLATION - Ratio + Location ONLY",
+  "description": "Ablation Model 1: Ratio + Location ONLY with GridSearchCV optimization",
+  "filter": "WITH_AR_FILTER",
+  "enhancement": "GridSearchCV with Stratified Spatial CV",
+  "timestamp": "2026-01-01T16:57:39.114868",
+  "data": {
+    "total_observations": 6553,
+    "crisis_events": 393,
+    "non_crisis_events": 6160,
+    "crisis_rate": 0.059972531664886315,
+    "imbalance_ratio": 15.674300254452927,
+    "countries": 13,
+    "districts": 947
+  },
+  "features": {
+    "total": 12,
+    "ratio": 9,
+    "zscore": 0,
+    "hmm": 0,
+    "dmd": 0,
+    "location": 3,
+    "excluded": "zscore, HMM, DMD"
+  },
+  "hyperparameter_tuning": {
+    "method": "GridSearchCV with Stratified Spatial CV",
+    "scoring": "recall",
+    "best_params": {
+      "colsample_bytree": 0.6,
+      "gamma": 1,
+      "learning_rate": 0.01,
+      "max_depth": 5,
+      "min_child_weight": 5,
+      "n_estimators": 300,
+      "reg_alpha": 0.1,
+      "reg_lambda": 2,
+      "subsample": 0.8
+    },
+    "best_cv_score": 0.7273779987740121
+  },
+  "cv_performance": {
+    "auc_roc_mean": 0.7271413435370342,
+    "auc_roc_std": 0.1650611240094689,
+    "pr_auc_mean": 0.23679887001722522,
+    "pr_auc_std": 0.10480060457301643,
+    "brier_score_mean": 0.11721101440787907,
+    "log_loss_mean": 0.39050319496131614,
+    "youden": {
+      "precision": 0.1576438084232199,
+      "recall": 0.6667366121612257,
+      "f1": 0.25335580103639777,
+      "specificity": 0.7741042692222365
+    },
+    "high_recall": {
+      "precision": 0.06184269057732674,
+      "recall": 1.0,
+      "f1": 0.11611475852981785
+    }
+  },
+  "top_features": {
+    "country_baseline_conflict": 0.19281180202960968,
+    "country_data_density": 0.182857483625412,
+    "country_baseline_food_security": 0.14832855761051178,
+    "other_ratio": 0.062332671135663986,
+    "health_ratio": 0.0571960024535656,
+    "food_security_ratio": 0.0556454062461853,
+    "economic_ratio": 0.052789587527513504,
+    "weather_ratio": 0.052260518074035645,
+    "conflict_ratio": 0.05222601816058159,
+    "displacement_ratio": 0.04943273216485977
+  }
+}

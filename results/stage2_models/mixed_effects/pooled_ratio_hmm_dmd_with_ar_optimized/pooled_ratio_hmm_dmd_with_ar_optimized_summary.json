@@ -1,0 +1,44 @@
+{
+  "model_name": "pooled_ratio_hmm_dmd_with_ar_optimized",
+  "feature_type": "ratio_hmm_dmd",
+  "filter_variant": "WITH_AR_FILTER",
+  "optimizations": {
+    "feature_selection": "None - all features used",
+    "class_weighting": 10
+  },
+  "n_observations": 6553,
+  "n_countries": 13,
+  "n_features_original": 23,
+  "n_features_selected": 23,
+  "selected_features": ["conflict_ratio", "displacement_ratio", "economic_ratio", "food_security_ratio", "governance_ratio", "health_ratio", "humanitarian_ratio", "other_ratio", "weather_ratio", "hmm_ratio_crisis_prob", "hmm_ratio_transition_risk", "hmm_ratio_entropy", "hmm_zscore_crisis_prob", "hmm_zscore_transition_risk", "hmm_zscore_entropy", "dmd_ratio_crisis_growth_rate", "dmd_ratio_crisis_instability", "dmd_ratio_crisis_frequency", "dmd_ratio_crisis_amplitude", "dmd_zscore_crisis_growth_rate", "dmd_zscore_crisis_instability", "dmd_zscore_crisis_frequency", "dmd_zscore_crisis_amplitude"],
+  "key_signals": ["conflict_ratio", "food_security_ratio"],
+  "class_balance": {
+    "n_crisis": 393,
+    "n_no_crisis": 6160,
+    "prevalence": 0.06
+  },
+  "threshold_optimization": {
+    "mean_youden": 0.312,
+    "mean_f1": 0.39,
+    "mean_high_recall": 0.244
+  },
+  "overall_metrics": {
+    "auc_roc": 0.5258,
+    "pr_auc": null,
+    "mean_fold_auc": 0.5679,
+    "std_fold_auc": 0.0703,
+    "mean_pr_auc": "NaN",
+    "std_pr_auc": "NA",
+    "mean_precision_youden": 0.1184,
+    "mean_recall_youden": 0.8547,
+    "mean_f1_youden": 0.1951,
+    "mean_specificity_youden": 0.309,
+    "mean_accuracy_youden": 0.3676,
+    "mean_brier_score": 0.2745,
+    "mean_log_loss": 0.8034
+  },
+  "random_effects": {
+    "level": "country",
+    "district_coverage": 0
+  }
+}

@@ -4,7 +4,7 @@
 Visualizes predictions at full IPC district granularity using centroid points.
 This avoids GADM aggregation entirely, showing 1 point per IPC district.
 
-Author: Claude
+Author: Victor Collins Oppon
 Date: 2025-11-30
 """
 

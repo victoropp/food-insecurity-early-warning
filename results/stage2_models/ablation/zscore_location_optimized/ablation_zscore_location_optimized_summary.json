@@ -1,0 +1,73 @@
+{
+  "model": "ablation_zscore_location_optimized",
+  "model_type": "ABLATION - Zscore + Location ONLY",
+  "description": "Ablation Model 4: Zscore + Location ONLY with GridSearchCV optimization",
+  "filter": "WITH_AR_FILTER",
+  "enhancement": "GridSearchCV with Stratified Spatial CV",
+  "timestamp": "2026-01-02T00:50:00.529089",
+  "data": {
+    "total_observations": 6553,
+    "crisis_events": 393,
+    "non_crisis_events": 6160,
+    "crisis_rate": 0.059972531664886315,
+    "imbalance_ratio": 15.674300254452927,
+    "countries": 13,
+    "districts": 947
+  },
+  "features": {
+    "total": 12,
+    "ratio": 0,
+    "zscore": 9,
+    "hmm": 0,
+    "dmd": 0,
+    "location": 3,
+    "excluded": "ratio, HMM, DMD"
+  },
+  "hyperparameter_tuning": {
+    "method": "GridSearchCV with Stratified Spatial CV",
+    "scoring": "recall",
+    "best_params": {
+      "colsample_bytree": 0.6,
+      "gamma": 1,
+      "learning_rate": 0.01,
+      "max_depth": 5,
+      "min_child_weight": 5,
+      "n_estimators": 300,
+      "reg_alpha": 0.1,
+      "reg_lambda": 1,
+      "subsample": 0.7
+    },
+    "best_cv_score": 0.7008928657161131
+  },
+  "cv_performance": {
+    "auc_roc_mean": 0.6990981153919809,
+    "auc_roc_std": 0.16514633981474766,
+    "pr_auc_mean": 0.21339599333089457,
+    "pr_auc_std": 0.09848004482502203,
+    "brier_score_mean": 0.11355339474322419,
+    "log_loss_mean": 0.3858985064975423,
+    "youden": {
+      "precision": 0.16800237074775648,
+      "recall": 0.6700748945000173,
+      "f1": 0.24491952594609848,
+      "specificity": 0.7193823113030754
+    },
+    "high_recall": {
+      "precision": 0.06184269057732674,
+      "recall": 1.0,
+      "f1": 0.11611475852981785
+    }
+  },
+  "top_features": {
+    "country_data_density": 0.18435534834861755,
+    "country_baseline_conflict": 0.17166408896446228,
+    "country_baseline_food_security": 0.1442527174949646,
+    "conflict_zscore": 0.0626363530755043,
+    "food_security_zscore": 0.05893506854772568,
+    "displacement_zscore": 0.05799686163663864,
+    "economic_zscore": 0.05603771656751633,
+    "weather_zscore": 0.05583391338586807,
+    "humanitarian_zscore": 0.05448715761303902,
+    "health_zscore": 0.052497558295726776
+  }
+}

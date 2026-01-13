@@ -10,7 +10,7 @@ Transition Types:
 - IPC 1 → 3+ : Sudden onset from minimal food insecurity
 - IPC 2 → 3+ : Escalation from stressed to crisis
 
-Author: Claude
+Author: Victor Collins Oppon
 Date: 2025-11-30
 """
 

@@ -5,7 +5,7 @@ Aggregates to unique (ipc_geographic_unit_full, period) level.
 KEY POINT: Each unique (geographic_unit_full, period) is ONE observation.
 This script handles any duplicates from the GDELT matching process.
 
-Author: Corrected for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

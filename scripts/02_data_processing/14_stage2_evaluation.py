@@ -14,7 +14,7 @@ Produces:
 9. Temporal performance analysis
 10. Cross-horizon comparison
 
-Author: Stage 2 Implementation
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

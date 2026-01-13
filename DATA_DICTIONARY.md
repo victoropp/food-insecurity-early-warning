@@ -824,9 +824,7 @@ zscore_ma_3 = mean(zscore[t-2:t])
 
 For questions about variable definitions or data quality:
 - **Author**: Victor Collins Oppon
-- **Email**: [your-email@example.com]
-- **GitHub**: [Repository link]
-
+- 
 ---
 
 **Last Updated**: January 10, 2025
