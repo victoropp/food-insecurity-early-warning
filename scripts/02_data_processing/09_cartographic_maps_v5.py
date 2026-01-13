@@ -8,7 +8,7 @@ Key fixes over V4:
 - All 3 panels perfectly aligned
 - All metrics 100% data-driven from actual prediction results
 
-Author: District-level analysis cartographic visualization V5
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

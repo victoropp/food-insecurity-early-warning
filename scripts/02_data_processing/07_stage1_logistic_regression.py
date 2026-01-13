@@ -9,7 +9,7 @@ KEY FEATURES:
 3. Predictions saved at district level
 4. THRESHOLD TUNING for balanced precision/recall
 
-Author: Updated with threshold optimization
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

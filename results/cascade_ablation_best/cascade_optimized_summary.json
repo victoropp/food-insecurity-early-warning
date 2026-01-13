@@ -1,0 +1,74 @@
+{
+  "model": "Cascade Ensemble - Best Ablation Model",
+  "strategy": "AR Baseline + Best Ablation Model (Ratio+Location) with Simple Binary Override",
+  "timestamp": "2026-01-03T11:08:01.379032",
+  "data": {
+    "total_observations": 20722,
+    "total_crises": 5322,
+    "crisis_rate": 0.25682849145835346,
+    "countries": 18,
+    "districts": 3438,
+    "with_stage2_predictions": 6553,
+    "override_candidates": 6553
+  },
+  "cascade_strategy": {
+    "method": "Simple Binary Logic",
+    "rule": "If AR=1 keep, if AR=0 use Stage2 prediction",
+    "total_overrides": 1638,
+    "override_rate": 0.24996184953456432
+  },
+  "ar_baseline_performance": {
+    "precision": 0.7318677189026682,
+    "recall": 0.7318677189026682,
+    "f1": 0.7318677189026683,
+    "specificity": 0.9073376623376623,
+    "balanced_accuracy": 0.8196026906201652,
+    "auc_roc": 0.9074944789333177,
+    "confusion_matrix": {
+      "tp": 3895,
+      "tn": 13973,
+      "fp": 1427,
+      "fn": 1427
+    }
+  },
+  "cascade_performance": {
+    "precision": 0.5974137931034482,
+    "recall": 0.7812852311161218,
+    "f1": 0.6770884220810942,
+    "specificity": 0.818051948051948,
+    "balanced_accuracy": 0.799668589584035,
+    "confusion_matrix": {
+      "tp": 4158,
+      "tn": 12598,
+      "fp": 2802,
+      "fn": 1164
+    }
+  },
+  "improvement": {
+    "recall_change": 0.049417512213453585,
+    "precision_change": -0.13445392579922,
+    "f1_change": -0.05477929682157412,
+    "fn_reduction": 263,
+    "key_saves": 263,
+    "ar_missed_crises": 1427,
+    "key_save_rate": 0.18430273300630695
+  },
+  "key_saves_by_country": {
+    "Zimbabwe": 81,
+    "Sudan": 59,
+    "Nigeria": 35,
+    "Democratic Republic of the Congo": 35,
+    "Mozambique": 19,
+    "Kenya": 12,
+    "Ethiopia": 8,
+    "Mali": 7,
+    "Malawi": 5,
+    "Somalia": 2
+  },
+  "output_files": {
+    "predictions": "cascade_optimized_predictions.csv",
+    "key_saves": "key_saves.csv",
+    "country_metrics": "country_metrics.csv",
+    "district_metrics": "district_metrics.csv"
+  }
+}

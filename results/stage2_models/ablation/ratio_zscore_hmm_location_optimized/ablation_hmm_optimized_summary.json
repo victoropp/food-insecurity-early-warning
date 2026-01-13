@@ -1,0 +1,73 @@
+{
+  "model": "ablation_ratio_zscore_hmm_location_optimized",
+  "model_type": "ABLATION - Ratio + Zscore + HMM + Location (NO DMD)",
+  "description": "Ablation Model 3: Ratio + Zscore + HMM + Location (NO DMD) with GridSearchCV",
+  "filter": "WITH_AR_FILTER",
+  "enhancement": "GridSearchCV with Stratified Spatial CV",
+  "timestamp": "2026-01-02T00:29:02.083367",
+  "data": {
+    "total_observations": 6553,
+    "crisis_events": 393,
+    "non_crisis_events": 6160,
+    "crisis_rate": 0.059972531664886315,
+    "imbalance_ratio": 15.674300254452927,
+    "countries": 13,
+    "districts": 947
+  },
+  "features": {
+    "total": 27,
+    "ratio": 9,
+    "zscore": 9,
+    "hmm": 6,
+    "dmd": 0,
+    "location": 3,
+    "excluded": "DMD features"
+  },
+  "hyperparameter_tuning": {
+    "method": "GridSearchCV with Stratified Spatial CV",
+    "scoring": "recall",
+    "best_params": {
+      "colsample_bytree": 0.8,
+      "gamma": 0,
+      "learning_rate": 0.01,
+      "max_depth": 5,
+      "min_child_weight": 5,
+      "n_estimators": 200,
+      "reg_alpha": 0,
+      "reg_lambda": 2,
+      "subsample": 0.8
+    },
+    "best_cv_score": 0.7067750995305884
+  },
+  "cv_performance": {
+    "auc_roc_mean": 0.703442965500425,
+    "auc_roc_std": 0.17686735500313722,
+    "pr_auc_mean": 0.2209056035659891,
+    "pr_auc_std": 0.10198518773436378,
+    "brier_score_mean": 0.1255272383662988,
+    "log_loss_mean": 0.4178114104913894,
+    "youden": {
+      "precision": 0.31047522950635076,
+      "recall": 0.6122672985213959,
+      "f1": 0.18976160869146655,
+      "specificity": 0.757779126358245
+    },
+    "high_recall": {
+      "precision": 0.06184269057732674,
+      "recall": 1.0,
+      "f1": 0.11611475852981785
+    }
+  },
+  "top_features": {
+    "country_data_density": 0.13375242054462433,
+    "country_baseline_conflict": 0.09724929928779602,
+    "country_baseline_food_security": 0.0641629695892334,
+    "hmm_ratio_transition_risk": 0.04123012349009514,
+    "other_ratio": 0.04046411067247391,
+    "conflict_zscore": 0.03581874817609787,
+    "displacement_zscore": 0.033377505838871,
+    "health_ratio": 0.032966095954179764,
+    "displacement_ratio": 0.03266138583421707,
+    "hmm_ratio_crisis_prob": 0.030814755707979202
+  }
+}

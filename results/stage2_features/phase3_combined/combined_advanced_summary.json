@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-01-01T10:19:08.682917",
+  "phase": "Phase 2: Combined HMM+DMD Features - XGBoost Pipeline",
+  "data": {
+    "total_observations": 63140,
+    "total_features": 65,
+    "feature_breakdown": {
+      "Ratio macros": 9,
+      "Zscore macros": 9,
+      "HMM ratio": 3,
+      "HMM zscore": 3,
+      "DMD ratio": 4,
+      "DMD zscore": 4,
+      "Location": 2,
+      "Target": 2,
+      "AR baseline": 2,
+      "IPC": 1,
+      "Metadata": 26
+    },
+    "n_countries": 14,
+    "n_districts": 1322
+  },
+  "feature_list": {
+    "ratio_macros": [
+      "conflict_ratio",
+      "displacement_ratio",
+      "economic_ratio",
+      "food_security_ratio",
+      "governance_ratio",
+      "health_ratio",
+      "humanitarian_ratio",
+      "other_ratio",
+      "weather_ratio"
+    ],
+    "zscore_macros": [
+      "conflict_zscore",
+      "displacement_zscore",
+      "economic_zscore",
+      "food_security_zscore",
+      "governance_zscore",
+      "health_zscore",
+      "humanitarian_zscore",
+      "other_zscore",
+      "weather_zscore"
+    ],
+    "hmm_ratio": [
+      "hmm_ratio_crisis_prob",
+      "hmm_ratio_transition_risk",
+      "hmm_ratio_entropy"
+    ],
+    "hmm_zscore": [
+      "hmm_zscore_crisis_prob",
+      "hmm_zscore_transition_risk",
+      "hmm_zscore_entropy"
+    ],
+    "dmd_ratio": [
+      "dmd_ratio_crisis_growth_rate",
+      "dmd_ratio_crisis_instability",
+      "dmd_ratio_crisis_frequency",
+      "dmd_ratio_crisis_amplitude"
+    ],
+    "dmd_zscore": [
+      "dmd_zscore_crisis_growth_rate",
+      "dmd_zscore_crisis_instability",
+      "dmd_zscore_crisis_frequency",
+      "dmd_zscore_crisis_amplitude"
+    ]
+  },
+  "outputs": {
+    "parquet": "C:\\GDELT_Africa_Extract\\Scripts\\district_pipeline\\FINAL_PIPELINE - StratifiedSpatialCV\\RESULTS\\stage2_features\\phase3_combined\\combined_advanced_features_h8.parquet",
+    "csv": "C:\\GDELT_Africa_Extract\\Scripts\\district_pipeline\\FINAL_PIPELINE - StratifiedSpatialCV\\RESULTS\\stage2_features\\phase3_combined\\combined_advanced_features_h8.csv"
+  }
+}

@@ -14,7 +14,7 @@ KEY FEATURES:
 - Temporal dimension: maps for each IPC classification date
 - More granular than GADM - uses official FEWSNET food security zones
 
-Author: Simplified Pipeline
+Author: Victor Collins Oppon
 Date: December 2024
 """
 

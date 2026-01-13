@@ -11,7 +11,7 @@ MEMORY-SAFE APPROACH:
 
 Designed for 8GB RAM systems.
 
-Author: Memory-optimized resume script
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

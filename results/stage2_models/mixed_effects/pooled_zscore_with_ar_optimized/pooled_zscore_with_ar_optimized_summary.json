@@ -1,0 +1,77 @@
+{
+  "model_name": "pooled_zscore_with_ar_optimized",
+  "feature_type": "zscore",
+  "filter_variant": "WITH_AR_FILTER",
+  "optimizations": {
+    "feature_selection": "None - all features used",
+    "class_weighting": 10,
+    "random_effects": "random intercepts + random slopes for key signals"
+  },
+  "timestamp": "2026-01-02 07:31:12.744422",
+  "n_observations": 6553,
+  "n_countries": 13,
+  "n_districts": 947,
+  "n_features_original": 9,
+  "n_features_selected": 9,
+  "selected_features": ["conflict_zscore", "displacement_zscore", "economic_zscore", "food_security_zscore", "governance_zscore", "health_zscore", "humanitarian_zscore", "other_zscore", "weather_zscore"],
+  "key_signals": ["conflict_zscore", "food_security_zscore"],
+  "class_balance": {
+    "n_crisis": 393,
+    "n_no_crisis": 6160,
+    "prevalence": 0.06,
+    "imbalance_ratio": 15.6743,
+    "class_weight_applied": 10
+  },
+  "threshold_optimization": {
+    "method": "Dynamic per-fold optimization",
+    "youden_description": "Maximizes Sensitivity + Specificity - 1",
+    "f1_description": "Maximizes F1 score",
+    "high_recall_description": "Targets 90% recall",
+    "mean_threshold_youden": 0.302,
+    "mean_threshold_f1": 0.276,
+    "mean_threshold_high_recall": 0.164,
+    "mean_youden_index": 0.1143
+  },
+  "overall_metrics": {
+    "primary_threshold": "youden",
+    "auc_roc": 0.6044,
+    "pr_auc": null,
+    "mean_fold_auc": 0.6079,
+    "std_fold_auc": 0.0343,
+    "mean_pr_auc": "NaN",
+    "std_pr_auc": "NA",
+    "mean_precision_youden": 0.1257,
+    "mean_recall_youden": 0.5513,
+    "mean_f1_youden": 0.1697,
+    "mean_specificity_youden": 0.563,
+    "mean_accuracy_youden": 0.5699,
+    "mean_balanced_accuracy_youden": 0.5571,
+    "mean_precision_f1": 0.1189,
+    "mean_recall_f1": 0.5166,
+    "mean_precision_high_recall": 0.1024,
+    "mean_recall_high_recall": 0.7032,
+    "mean_brier_score": 0.2648,
+    "mean_log_loss": 0.9028,
+    "overall_brier_score": 0.2119
+  },
+  "n_folds": 5,
+  "random_effects_selection": {
+    "preferred_level": "district",
+    "min_obs_per_group": 10,
+    "coverage_threshold": 0.5,
+    "actual_district_coverage": 0,
+    "districts_with_sufficient_obs": 0,
+    "total_districts": 947,
+    "initial_decision": "country",
+    "folds_using_district": 0,
+    "folds_using_country": 5
+  },
+  "model_specification": {
+    "formula_alignment": "Research Proposal Stage 4",
+    "fixed_effects": "beta^T X_{r,t} - 9 selected features",
+    "random_intercepts": "alpha_r - country-specific baseline risk",
+    "random_slopes": "b_r Z_{r,t} for: conflict_zscore, food_security_zscore",
+    "key_signals": ["conflict_zscore", "food_security_zscore"],
+    "grouping_variable": "ipc_country"
+  }
+}

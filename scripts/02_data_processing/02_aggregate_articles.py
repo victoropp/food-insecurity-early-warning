@@ -14,7 +14,7 @@ TEMPORAL AGGREGATION (CRITICAL):
    - For Jun assessment: aggregate Mar, Apr, May, Jun articles
    - For Oct assessment: aggregate Jul, Aug, Sep, Oct articles
 
-Author: Corrected for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

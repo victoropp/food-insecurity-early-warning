@@ -1,0 +1,74 @@
+{
+  "model": "ablation_ratio_hmm_ratio_location_optimized",
+  "model_type": "ABLATION - Ratio + Location ONLY",
+  "description": "Ablation Model 7: Ratio + HMM Ratio + Location with GridSearchCV optimization",
+  "filter": "WITH_AR_FILTER",
+  "enhancement": "GridSearchCV with Stratified Spatial CV",
+  "timestamp": "2026-01-01T10:51:40.358032",
+  "data": {
+    "total_observations": 6553,
+    "crisis_events": 393,
+    "non_crisis_events": 6160,
+    "crisis_rate": 0.059972531664886315,
+    "imbalance_ratio": 15.674300254452927,
+    "countries": 13,
+    "districts": 947
+  },
+  "features": {
+    "total": 15,
+    "ratio": 9,
+    "zscore": 0,
+    "hmm": 0,
+    "dmd": 0,
+    "location": 3,
+    "excluded": "zscore, DMD",
+    "hmm_ratio": 3
+  },
+  "hyperparameter_tuning": {
+    "method": "GridSearchCV with Stratified Spatial CV",
+    "scoring": "recall",
+    "best_params": {
+      "colsample_bytree": 0.8,
+      "gamma": 1,
+      "learning_rate": 0.05,
+      "max_depth": 5,
+      "min_child_weight": 5,
+      "n_estimators": 100,
+      "reg_alpha": 0,
+      "reg_lambda": 1,
+      "subsample": 0.7
+    },
+    "best_cv_score": 0.7282429439827357
+  },
+  "cv_performance": {
+    "auc_roc_mean": 0.7185178252433634,
+    "auc_roc_std": 0.1592565316515057,
+    "pr_auc_mean": 0.24603287445245722,
+    "pr_auc_std": 0.10909437072021681,
+    "brier_score_mean": 0.09826350111401236,
+    "log_loss_mean": 0.3361880494102253,
+    "youden": {
+      "precision": 0.14292218846795338,
+      "recall": 0.6793141172460337,
+      "f1": 0.23548692824801432,
+      "specificity": 0.7346661920389663
+    },
+    "high_recall": {
+      "precision": 0.06184269057732674,
+      "recall": 1.0,
+      "f1": 0.11611475852981785
+    }
+  },
+  "top_features": {
+    "country_data_density": 0.19877034425735474,
+    "country_baseline_conflict": 0.12067804485559464,
+    "country_baseline_food_security": 0.11005783081054688,
+    "other_ratio": 0.05473677068948746,
+    "food_security_ratio": 0.05301888659596443,
+    "hmm_ratio_transition_risk": 0.050362855195999146,
+    "displacement_ratio": 0.04836267605423927,
+    "weather_ratio": 0.048345260322093964,
+    "health_ratio": 0.04756120964884758,
+    "economic_ratio": 0.04752292111515999
+  }
+}

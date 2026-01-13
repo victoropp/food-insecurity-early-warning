@@ -14,7 +14,7 @@ TEMPORAL AGGREGATION (CRITICAL) - ALIGNED WITH 02_aggregate_articles.py:
    - For Jun assessment: aggregate Mar, Apr, May, Jun locations
    - For Oct assessment: aggregate Jul, Aug, Sep, Oct locations
 
-Author: Corrected for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

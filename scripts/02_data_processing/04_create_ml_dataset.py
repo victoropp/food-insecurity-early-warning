@@ -7,7 +7,7 @@ KEY CORRECTIONS:
 2. Merges on ipc_geographic_unit_full (unique district-period identifier)
 3. Preserves district and region columns throughout
 
-Author: Corrected for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

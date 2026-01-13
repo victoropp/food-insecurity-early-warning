@@ -1,0 +1,16 @@
+LARGE GDELT ARTICLES FILE (47GB)
+===================================
+
+Due to its large size (47GB), the raw GDELT articles CSV is NOT copied into this directory.
+
+Original Location:
+  C:\GDELT_Africa_Extract\data\archive\african_gkg_articles.csv
+
+The file `02_aggregate_articles.py` in STAGE_1_AR_BASELINE reads from this location.
+
+IMPORTANT: If you move or reorganize the project, update this path in:
+  - STAGE_1_AR_BASELINE/02_aggregate_articles.py (line 59)
+
+Alternative: The script processes this file in chunks and creates much smaller aggregated outputs.
+You can skip running this script if you already have the aggregated outputs in:
+  C:\GDELT_Africa_Extract\data\district_level\stage1\articles_aggregated.parquet (4.7MB)

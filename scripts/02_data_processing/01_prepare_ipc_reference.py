@@ -7,7 +7,7 @@ KEY CORRECTION:
 - Extracts district name from the hierarchical full_name structure
 - Each (geographic_unit_full_name, period) is one unique observation
 
-Author: Corrected for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import pandas as pd

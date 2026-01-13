@@ -11,7 +11,7 @@ This script runs all pipeline stages in sequence:
 6. Feature Engineering (Lt, Ls autoregressive features)
 7. Stage 1 Logistic Regression (spatial CV baseline)
 
-Author: Pipeline corrected for district-level analysis
+Author: Victor Collins Oppon
 """
 
 import subprocess
