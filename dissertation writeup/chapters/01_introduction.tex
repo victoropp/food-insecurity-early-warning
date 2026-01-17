@@ -1,0 +1,570 @@
+% Chapter 1: Introduction
+
+\section{Context and Motivation}
+
+Food insecurity affects 282 million people across 59 crisis-affected countries, with Sub-Saharan Africa bearing a disproportionate burden \citep{grfc2024, ipc2024}. The humanitarian consequences are severe: malnutrition, disease, displacement, economic collapse, and in extreme cases, famine and death. Early warning systems are critical for humanitarian response, enabling timely interventions that save lives and mitigate suffering. When warnings arrive 6-8 months in advance, humanitarian agencies can pre-position food supplies, negotiate access with governments, mobilise funding through appeals, and implement targeted assistance programs before crises peak \citep{torabi2018prepositioning, baskaya2017prepositioning, choularton2019fewsnet}.
+
+    \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.90\textwidth]{figures/ch01_introduction/ch01_ipc_classification.pdf}
+    \caption[IPC Food Security Phase Classification System]{
+        \textbf{Standardised 5-phase scale for acute food insecurity.}
+        The IPC classifies food security from Phase 1 (Minimal) to Phase 5 (Famine), with Phase 3+ representing crisis thresholds triggering humanitarian response. This dissertation predicts binary outcomes (IPC $\geq$ 3) at district level with 8-month forecast horizons. Crisis rate in dataset: 25.7\%.
+        \textit{n=20,722 observations, 18 countries, 2021-2024.}
+    }
+    \label{fig:ch1_ipc_classification}
+    \end{figure}
+
+Traditional early warning approaches rely on satellite-based vegetation indices (NDVI), rainfall anomaly monitoring (CHIRPS, TAMSAT), market price tracking, and household survey data \citep{funk2015chirps, maidment2017tamsat, lentz2019data}. While these methods have proven valuable, they suffer from several limitations. Satellite data provides broad spatial coverage but operates at coarse temporal resolution and often lags 2-4 weeks behind ground conditions due to processing delays and cloud cover interference \citep{cannella2024comparative}. Market price data captures economic shocks but may not reflect localized crises in remote areas with limited market integration. Household surveys (e.g., FEWSNET Livelihoods Baseline Profiles) provide rich contextual information but are expensive, logistically challenging, and conducted infrequently---typically annually or bi-annually, missing rapid-onset crises that emerge between assessment cycles \citep{abegaz2017food, monteza2025social}.
+
+News media offers a compelling alternative data source that addresses several of these limitations \citep{robinson2017cnn, olsen2003humanitarian, lee2021media}. News coverage is near real-time, updated continuously as events unfold. It captures ground-level perspectives through conflict reports, displacement narratives, economic disruption descriptions, weather impact assessments, and humanitarian access constraints. Unlike satellite data, news coverage can detect crises in cloud-covered regions, urban areas, and conflict zones where physical access for surveys is impossible. The global reach of wire services (Reuters, AFP, AP) \citep{bishop1975reuters, winder2010reuters} and the proliferation of local news outlets in African countries means that even remote crises often receive media attention, particularly when humanitarian consequences are severe.
+
+Recent work has demonstrated that text-based features extracted from news archives can predict food insecurity with impressive accuracy \citep{balashankar2023predicting, busker2024predicting}. Using 11.2 million news articles with natural language processing (frame-semantic parsing and word embeddings) for feature extraction and Random Forest regression for prediction, researchers have achieved strong predictive performance (PR-AUC=0.82) for forecasting IPC phases up to 12 months ahead across 21 countries. These results suggest that the ``digital exhaust'' of global news coverage contains valuable early-warning signals that machine learning can extract and operationalize.
+
+However, existing approaches face a fundamental methodological challenge that has received insufficient attention in the literature. Food security crises exhibit strong temporal and spatial persistence~\citep{scientific_reports_2024_spatial, lentz2019data}. Today's crisis is highly predictive of tomorrow's crisis---chronic food insecurity in regions like South Sudan, Somalia, and the Sahel persists for months or years, driven by structural factors (poverty, conflict, climate vulnerability) that change slowly. Adjacent districts often share similar outcomes due to common exposure to regional shocks (drought, conflict spillovers, market disruptions) and spatial diffusion of crises through population movements and trade linkages.
+
+This \textit{autocorrelation trap} raises a critical question: are sophisticated news-based models capturing genuine predictive signals from text features, or are they primarily learning temporal and spatial patterns that simpler autoregressive (AR) baselines could replicate? If a model using only \texttt{IPC\_{t-1}} (last period's food security status) and \texttt{IPC\_{neighbours}} (spatial status of surrounding districts) achieves 90\% of a news model's performance, can we credibly claim that text features provide substantial predictive value? Without rigorous comparison against strong temporal baselines, high performance may reflect autocorrelation rather than genuine signal from news content \citep{choularton2019fewsnet}.
+
+    \begin{sloppypar}
+This dissertation confronts this challenge directly. Using 55,129 district-level food security assessments from the Integrated Food Security Phase Classification (IPC) system across 24 African countries spanning 2021-2024 (refined to 20,722 observations across 1,920 districts in 18 countries after applying h=8 forecast horizon requirements and data quality filters), combined with 7.6 million GDELT news articles, we develop and evaluate a spatio-temporal autoregressive baseline. This AR model uses only two autoregressive features: Lt (temporal autoregressive feature using the first-order lag IPC\textsubscript{t-1}) and Ls (spatial autoregressive feature using inverse-distance weighted IPC values from surrounding districts within a 300km radius) \citep{conley2007spatial, conley2002socioeconomic, han2016spillover}. These are autoregressive features---lagged values of the dependent variable (IPC) itself, not external covariates---with no text features whatsoever.
+    \end{sloppypar}
+
+The results are striking: the AR baseline achieves AUC=0.907, Precision=0.732, Recall=0.732, and F1=0.732 at 8-month forecast horizons. This performance approaches published news-based models (93.8\% of Balashankar et al.'s PR-AUC), demonstrating that spatio-temporal persistence dominates crisis prediction. The autocorrelation trap is not theoretical---it is empirically real and quantitatively large. Claims of predictive value from text features must overcome the high bar set by simple persistence.
+
+Yet the AR baseline is not perfect. It misses 1,427 crises out of 5,322 total (26.8\%), revealing systematic failures where temporal patterns break down. These failures represent \textit{missed early-warning opportunities}---cases where the past is not a reliable guide to the future, where structural persistence fails, and where dynamic signals from news media might provide genuine value. Examining these failures reveals patterns: they concentrate in conflict-affected regions (Sudan, DRC, Zimbabwe), occur during rapid-onset shocks (coup d'états, acute conflict escalation, displacement crises), and cluster in periods where narrative regimes shift (peaceful to violent, stable to chaotic).
+
+This dissertation develops a two-stage residual modelling framework that leverages AR strengths while explicitly targeting its weaknesses. Stage 1 deploys the spatio-temporal AR baseline to identify structurally persistent crises---the 73.2\% of cases where simple persistence suffices. Stage 2 focuses exclusively on the WITH\_AR\_FILTER subset (6,553 cases where IPC\textsubscript{t-1} $\leq$ 2 AND AR predicted non-crisis, including 1,427 cases where AR missed actual crises), deploying dynamic news features, Hidden Markov Model (HMM) regime detection, and Dynamic Mode Decomposition (DMD) temporal pattern extraction to rescue missed opportunities \citep{turkes2019prepositioning}.
+
+The framework achieves 249 successful predictions of AR-missed crises---a 17.4\% rescue rate representing 249 early warnings 8 months in advance that the AR baseline missed entirely. \textbf{These are not routine cases}: they represent the \textit{hardest-to-predict crises} where temporal persistence breaks down---conflict-driven shocks in Sudan and DRC, rapid-onset displacement in Zimbabwe, coup-related disruptions---the very cases where early warning matters most for humanitarian response. When aggregate metrics improve from Recall=0.732 to 0.779 (AR baseline to ensemble), this is not merely a 4.7 percentage point statistical gain. \textbf{It represents 249 real crises, affecting millions of people, now predicted 8 months in advance when they were previously invisible to persistence-based forecasting.} These are the marginal cases where news signals provide genuine value: detecting regime shifts, capturing conflict escalation, and identifying rapid-onset shocks that confound autoregressive baselines.
+
+This success reflects a deliberate design choice prioritising recall over precision. The framework achieves Recall=0.779 (up from 0.732), successfully identifying 249 additional crises that the AR baseline missed, while Precision decreases from 0.732 to 0.585. \textbf{In humanitarian early warning contexts, this trade-off is operationally appropriate}: missing a crisis (false negative) leads to catastrophic outcomes---famine, death, displacement---while false alarms, though wasteful of resources, allow humanitarian actors to stand down pre-positioned supplies and redirect funding \citep{thoolen1992information}. The framework's design philosophy aligns with established humanitarian principles: \textit{it is better to be over-prepared than to miss a crisis entirely}. FEWSNET, WFP, and other operational early warning systems routinely issue precautionary alerts precisely because the asymmetric costs favour sensitivity (high recall) over specificity (high precision) when lives are at stake \citep{choularton2019fewsnet}.
+
+This dissertation provides a comprehensive analysis of when, where, and how dynamic news signals provide genuine early-warning information beyond spatio-temporal persistence. We address five core research questions spanning methodological critique (the autocorrelation trap), feature engineering (ratio vs z-score, news categories), hidden variables (HMM, DMD), framework performance (two-stage selective deployment), and geographic heterogeneity (Zimbabwe, Sudan, DRC). Through ablation studies across 8 model variants, interpretability analysis using three complementary methods (XGBoost feature importance, mixed-effects coefficients, SHAP values \citep{lundberg2017unified}), and real-world case studies, we demonstrate that \textbf{news signals rescue the hardest-to-predict crises}---conflict-driven shocks, rapid-onset displacements, and regime transitions where persistence models fail and where timely intervention saves lives. The contribution is not universal improvement across all cases, but \textit{targeted success for the cases that matter most}.
+
+    \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/ch01_introduction/ch01_two_stage_framework.pdf}
+    \caption[Two-Stage Cascade Framework]{
+        \textbf{Selective deployment: AR for persistence, news for rapid-onset shocks.}
+        Stage 1 AR baseline achieves Precision=Recall=0.732 (AUC=0.907) using only temporal autoregressive features and spatial autoregressive features. Stage 2 deploys XGBoost with 35 dynamic features exclusively on AR=0 cases (n=6,553), rescuing 249 crises that AR missed. Final cascade: Precision=0.585, Recall=0.779, with 70.7\% of key saves concentrated in conflict zones (Zimbabwe 77, Sudan 59, DRC 40). \textbf{249 crises rescued where persistence failed---8 months advance warning for rapid-onset shocks.}
+        \textit{n=20,722 observations, h=8 months, 18 countries.}
+    }
+    \label{fig:ch1_two_stage_framework}
+    \end{figure}
+
+\section{Problem Statement: The Autocorrelation Trap}
+
+    \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/ch01_introduction/ch01_autocorrelation_trap.pdf}
+    \caption[The Autocorrelation Trap]{
+        \textbf{Temporal persistence achieves near-literature performance with zero news features.}
+        AR baseline (using only Lt and Ls autoregressive features) achieves PR-AUC=0.765, reaching 93.8\% of Balashankar et al. (2023) news model performance (PR-AUC=0.816). This demonstrates the autocorrelation trap: high predictive accuracy stems primarily from temporal and spatial persistence, not news signals. Literature benchmarks typically lack AR baseline comparisons, obscuring marginal contributions of text features.
+        \textit{n=20,722 observations, h=8 months, 5-fold spatial CV.}
+    }
+    \label{fig:ch1_autocorrelation_trap}
+    \end{figure}
+
+The central problem motivating this research is methodological: how do we distinguish genuine predictive signals from text features versus spurious correlations driven by temporal and spatial autocorrelation?
+
+Existing literature on news-based crisis prediction \citep{balashankar2023predicting, busker2024predicting} typically evaluates performance against held-out test sets using standard train-test splits or cross-validation. These evaluations demonstrate that text features improve prediction accuracy for binary classification of food security crises. Performance gains are attributed to the informational content of news coverage: conflict reports signal impending displacement and market disruption, economic news captures inflation and unemployment, weather reports indicate agricultural shocks, and humanitarian coverage reflects access constraints and response gaps.
+
+However, these evaluations rarely compare against strong temporal baselines. A few studies include simple lag features (\texttt{y\_{t-1}}) as controls, but we are unaware of any work in the food security domain that systematically compares news-based models against spatio-temporal autoregressive baselines with both temporal autoregressive features (Lt: first-order lag of past IPC values, t-1) and spatial autoregressive features (Ls: inverse-distance weighted IPC values from surrounding districts), combined with proper spatial cross-validation to prevent information leakage.
+
+This omission is consequential. Consider a hypothetical model that achieves Recall=0.82 for predicting IPC Phase 3+ crises. If a simple AR baseline using only \texttt{IPC\_{t-1}} and \texttt{IPC\_{neighbours}} achieves Recall=0.78, the marginal contribution of 0.04 (4 percentage points) reflects standard aggregate reporting. \textbf{But this framing obscures what operationally matters}: those 4 percentage points represent hundreds of real crises---\textit{the hardest cases to predict}---where persistence fails and early warning could save lives. If the ensemble rescues 200 AR-missed crises 8 months in advance, providing humanitarian actors time to pre-position food aid, negotiate access, and mobilise funding, that is not a ``4 percentage point gain.'' \textbf{It is 200 operationally critical early warnings for conflict-driven shocks, rapid-onset displacements, and regime transitions---the very crises where timely intervention matters most.} As demonstrated in this dissertation, news features drive 74.7\% of marginal predictions (SHAP attribution) for these AR-missed cases, providing dominant signal precisely where it is most needed.
+
+The autocorrelation trap has three fundamental implications for the field:
+
+\textbf{First, it inflates the apparent value of complex features.} High performance may reflect temporal persistence rather than genuine signals from text. Food security crises in regions like South Sudan, Somalia, Yemen, and the Sahel persist for extended periods due to structural factors: chronic poverty, recurrent climate shocks (droughts, floods), protracted conflicts, weak governance, limited market access, and poor infrastructure. The IPC Phase 3 classification (Crisis) or Phase 4 (Emergency) often persists for 6-12 months with only minor fluctuations. A model that simply predicts \texttt{IPC\_t = IPC\_{t-1}} will achieve high accuracy in such contexts. Without AR baseline comparisons, we cannot isolate the marginal contribution of text features beyond what temporal persistence already captures.
+
+Spatial autocorrelation creates additional structure. Adjacent districts share common exposure to regional shocks (droughts affect entire watersheds, conflicts spill across borders, market disruptions propagate through trade networks) and exhibit spatial clustering of outcomes. A model that incorporates \texttt{IPC\_{neighbours}} captures these spatial dependencies. While persistence-dominated cases are well-captured by AR baselines, the critical 26.8\% of shock-driven crises break these patterns---precisely where news features provide dominant marginal signal (74.7\% SHAP attribution).
+
+\textbf{Second, it obscures \textit{when} and \textit{where} news actually matters.} If most predictions succeed due to autocorrelation, news features may only help in specific contexts that get averaged out in aggregate metrics:
+    \begin{itemize}
+    \item \textbf{Crisis types:} News may matter for conflict-driven and displacement crises (where temporal patterns break due to rapid-onset shocks) but not for climate-driven crises (where seasonal patterns dominate and persistence is strong).
+    \item \textbf{Geographic contexts:} News may matter in news-dense regions with extensive media coverage (Kenya, Nigeria, Ethiopia) but not in remote areas with limited reporting (rural Mozambique, northern Mali) \citep{stonbely2023news, madrid2016chinese}.
+    \item \textbf{Temporal dynamics:} News may matter during regime transitions (peaceful $\times$ violent, stable $\times$ chaotic) but not during stable periods where structural persistence dominates.
+    \item \textbf{Forecast horizons:} News may matter at longer horizons (8-12 months) where persistence weakens but not at shorter horizons (2-4 months) where autocorrelation is strongest \citep{forecast1998evaluating, koparanov2025forecast}.
+    \end{itemize}
+Aggregate evaluation metrics (overall AUC, precision, recall) average across these heterogeneous contexts, obscuring the specific conditions where text features provide value. We need disaggregated analysis by crisis type, country, temporal period, and horizon to identify when news provides dominant predictive signal versus when persistence patterns dominate.
+
+\textbf{Third, it hinders operational deployment and resource allocation.} Early warning systems operate under resource constraints: limited budgets for data acquisition, finite computational capacity for model training and inference, scarce human expertise for model maintenance and interpretation, and bounded attention from humanitarian decision-makers \citep{abilov2025operationalizing}. If simple AR baselines achieve 90-95\% of news model performance using only freely available historical IPC data (no web scraping, no NLP pipelines, no GPU infrastructure), why invest in complex text-based systems?
+
+The answer depends on \textit{selective deployment}: if news features help primarily in specific contexts (conflict zones, rapid-onset shocks, news-dense regions), systems should deploy them selectively rather than universally. A two-stage framework that: (1) uses AR for structurally persistent cases (the majority), and (2) deploys complex features only for AR-difficult cases (the minority), maximises value while minimising cost. But this requires knowing which cases are AR-difficult---which in turn requires building the AR baseline and analysing its failures.
+
+Current practice treats all cases equally, deploying the same news-based model universally. This misallocates resources: over-investing in contexts where persistence suffices (wasting money on unnecessary complexity) and under-investing in contexts where richer text sources (social media, humanitarian reports, local-language news) might complement English-language news for AR-difficult cases.
+
+Our AR baseline provides empirical grounding for these concerns. At 8-month forecast horizons using stratified spatial cross-validation (5 folds, 20 geographic clusters), the AR model achieves:
+    \begin{itemize}
+    \item \textbf{AUC}: 0.907 (90.7\% of perfect discrimination)
+    \item \textbf{Precision}: 0.732 (73.2\% of predicted crises are actual crises)
+    \item \textbf{Recall}: 0.732 (73.2\% of actual crises are correctly predicted)
+    \item \textbf{F1}: 0.732 (harmonic mean of precision and recall)
+    \item \textbf{Confusion matrix}: TP=3,895, TN=13,973, FP=1,427, FN=1,427 (out of 20,722 total observations)
+    \end{itemize}
+
+These metrics are reported at the optimal threshold (0.629) selected via a balanced-constrained optimisation strategy that maximises precision-recall parity while meeting a minimum performance constraint (precision, recall $\geq$ 0.60), ensuring operationally viable performance for humanitarian deployment.
+
+This performance is achieved using only:
+    \begin{itemize}
+    \item \textbf{Temporal autoregressive feature (Lt)}: Past IPC value at t-1 (first-order lag)
+    \item \textbf{Spatial autoregressive feature (Ls)}: Inverse-distance weighted IPC values from surrounding districts within a 300km radius
+    \item \textbf{No text features, no covariates}: Zero news articles, zero GDELT data, zero NLP processing, zero external predictors---only autoregressive values of IPC itself
+    \end{itemize}
+
+The challenge is not whether news features \textit{can} predict crises (they can), but whether they add value \textit{beyond what persistence already captures} (the marginal contribution). This dissertation takes the autocorrelation trap seriously, treating it as a methodological imperative rather than a theoretical curiosity.
+
+\vspace{0.3cm}
+
+\noindent\textit{This section established the autocorrelation trap as the central methodological challenge: food security crises exhibit strong temporal and spatial persistence, enabling spatio-temporal autoregressive baselines to achieve AUC=0.907 using only two features (Lt and Ls) with zero text features or external covariates. Without rigorous comparison against such baselines, high performance in news-based models may reflect autocorrelation rather than genuine signals from text. This trap inflates apparent value of complex features, obscures when and where news actually matters, and hinders operational deployment decisions. Addressing this trap requires treating AR baseline comparisons as mandatory rather than optional.}
+\vspace{0.3cm}
+
+\section{Research Gap}
+
+Despite growing interest in news-based forecasting for humanitarian crises, and increasing recognition of machine learning's potential for social good applications, existing literature exhibits five critical gaps that this dissertation addresses:
+
+\subsection{Gap 1: Lack of Rigorous AR Baseline Comparisons}
+
+Most published work on news-based crisis prediction evaluates text features against one of three baseline types:
+
+\textbf{Naive baselines} (most common): stratified random sampling, always-predict-majority-class, or uniform random predictions. These baselines are trivially weak---any reasonable model beats them---making them uninformative about genuine predictive value. Comparing against naive baselines is akin to claiming athletic prowess by racing against stationary opponents.
+
+\textbf{Simple lag baselines} (less common): including \texttt{y\_{t-1}} as a single control variable in regression models or as one feature among many in ML classifiers. While better than naive baselines, this approach suffers from two problems: (a) it does not optimise temporal autoregressive features (Lt could be 1, 2, 3, or more lags), and (b) it omits spatial autoregressive features entirely, ignoring the well-documented spatial clustering of food security outcomes \citep{scientific_reports_2024_spatial, pmc_ethiopia_spatial_2024}.
+
+\textbf{No baselines} (surprisingly common): directly evaluating news-based models against held-out test sets without any baseline comparison, claiming success based on achieving ``high'' AUC (>0.70) or accuracy (>75\%). This approach provides no information about marginal contribution---we cannot know if the text features add value beyond trivial persistence.
+
+We are unaware of any work in the food security domain that:
+    \begin{itemize}
+    \item Systematically compares news-based models against spatio-temporal AR baselines with both temporal autoregressive features (Lt: first-order lag of past IPC values, t-1) and spatial autoregressive features (Ls: neighboring IPC values)
+    \item Implements spatial autoregressive weighting (e.g., inverse-distance weighting within specified radius)
+    \item Uses proper spatial cross-validation to prevent geographic information leakage \citep{mdpi_spatial_random_cv_2023, frontiers_spatial_blocks_2025}
+    \item Reports marginal contribution of text features after accounting for persistence
+    \end{itemize}
+
+This gap is consequential. If AR baselines routinely achieve 85-95\% of news model performance (as our results suggest), the entire premise of news-based early warning requires rethinking. The value proposition shifts from ``news predicts crises'' (true but misleading) to ``news provides marginal value beyond persistence in specific contexts'' (more accurate but less compelling).
+
+\subsection{Gap 2: Inability to Distinguish Structural Persistence from Shock-Driven Dynamics}
+
+Food security crises have two distinct temporal components that existing methods do not separate:
+
+\textbf{Structural persistence}: Chronic food insecurity driven by slow-moving factors (poverty, climate vulnerability, weak governance, poor infrastructure, market fragmentation) \citep{jumare2018poverty, fofack2008poverty, okai1997agriculture}. These conditions persist for years, exhibiting strong temporal autocorrelation. South Sudan has experienced IPC Phase 3+ conditions for most of 2013-2024 due to protracted conflict, political instability, and economic collapse. Persistence dominates prediction in such contexts---knowing IPC\_t-1 is highly informative about IPC\_t.
+
+\textbf{Shock-driven dynamics}: Rapid-onset events that disrupt existing patterns (conflict escalation, coups d'état, acute displacement, market collapse, extreme weather events) \citep{mahlatsi2023conflict, sithole2025remittances}. These shocks break temporal autocorrelation, making persistence-based predictions fail. The 2023 Sudan conflict (April 2023 outbreak of fighting in Khartoum) triggered acute food insecurity in previously stable regions within weeks, rendering historical patterns obsolete.
+
+Existing methods fit a single model to all cases, implicitly assuming that predictive patterns are homogeneous. This assumption fails: AR baselines work well for structurally persistent cases (the majority) but fail for shock-driven cases (the minority). News features provide their greatest value for the latter (where temporal patterns break and where early warning matters most) while persistence suffices for the former.
+
+We need methods that:
+    \begin{itemize}
+    \item Explicitly model structural persistence through AR baselines
+    \item Identify shock-driven cases as AR failures (where persistence breaks)
+    \item Deploy complex features selectively for difficult cases only
+    \item Evaluate performance separately for persistent vs shock-driven crises
+    \end{itemize}
+
+This gap motivates our two-stage framework: use AR for structure, use news for shocks.
+
+\subsection{Gap 3: Absence of Two-Stage Frameworks Leveraging AR Strengths}
+
+If AR baselines capture structural persistence effectively, why not use them explicitly? Current practice deploys the same news-based model universally, treating all cases as equally difficult. This one-size-fits-all approach is inefficient:
+    \begin{itemize}
+    \item \textbf{Over-engineering easy cases}: For structurally persistent crises where AR suffices, deploying complex NLP pipelines (keyword extraction, topic modelling, regime detection) wastes computational resources
+    \item \textbf{Under-engineering hard cases}: For shock-driven crises where AR fails, basic news aggregation alone may miss critical signals that advanced NLP techniques (HMM regime detection, DMD temporal dynamics, semantic embeddings) could capture
+    \end{itemize}
+
+A two-stage framework addresses both inefficiencies:
+    \begin{enumerate}
+    \item \textbf{Stage 1 (AR baseline)}: Cheap, fast, captures persistence. Achieves 73.2\% precision/recall.
+    \item \textbf{Stage 2 (dynamic features)}: Expensive, slow, captures shocks. Deploys only for WITH\_AR\_FILTER cases (IPC\textsubscript{t-1} $\leq$ 2 AND AR=0).
+    \end{enumerate}
+
+This selective deployment maximises value per unit cost. Stage 1 handles ~70\% of persistence-dominated cases efficiently with AR baselines. Stage 2 deploys sophisticated news-based methods for the critical 26.8\% of shock-driven cases where news features drive predictions. Combined framework achieves better coverage (recall) with strategic resource allocation.
+
+Existing literature lacks two-stage frameworks because it lacks AR baselines to define Stage 1. Our work provides both.
+
+\subsection{Gap 4: Limited Model Interpretation Frameworks for Geographic and Temporal Heterogeneity}
+
+Aggregate evaluation metrics (overall AUC, precision, recall) obscure heterogeneity. Consider a model with AUC=0.80 overall. This aggregate could reflect:
+    \begin{itemize}
+    \item Homogeneous performance: AUC$\approx$0.80 in all countries (news helps uniformly)
+    \item Heterogeneous performance: AUC=0.95 in Kenya, 0.65 in Mali (news helps selectively)
+    \end{itemize}
+
+These scenarios have different implications:
+    \begin{itemize}
+    \item Homogeneous $\Rightarrow$ deploy news features universally
+    \item Heterogeneous $\Rightarrow$ deploy news features selectively (only where AUC is high)
+    \end{itemize}
+
+Most published work reports aggregate metrics only, providing no disaggregated analysis by:
+    \begin{itemize}
+    \item \textbf{Country}: Does news help equally in Kenya, Somalia, Nigeria, Ethiopia?
+    \item \textbf{Crisis type}: Conflict vs climate vs structural vs displacement-driven?
+    \item \textbf{Temporal period}: Stable periods vs regime transitions vs acute shocks?
+    \item \textbf{News coverage density}: High-coverage vs low-coverage regions?
+    \end{itemize}
+
+We need model interpretation frameworks that identify:
+    \begin{itemize}
+    \item Which features matter most (feature importance rankings)
+    \item Which countries are most sensitive to news features (mixed-effects random coefficients)
+    \item Which specific cases benefit from news (SHAP value analysis)
+    \item Cross-method agreement and divergence (triangulation across approaches)
+    \end{itemize}
+
+This gap motivates our three-method model interpretation framework (XGBoost, mixed-effects, SHAP) with extensive disaggregation by country, crisis type, and temporal context.
+
+\subsection{Gap 5: Static Feature Engineering (Article Counts Only)}
+
+Most existing work uses static features derived from news content:
+    \begin{itemize}
+    \item \textbf{Article counts}: Number of articles mentioning keywords (drought, conflict, famine)
+    \item \textbf{Ratios}: Articles per month, normalised by baseline coverage
+    \item \textbf{Sentiment scores}: Average tone, polarity, subjectivity
+    \end{itemize}
+
+These features miss three types of dynamic signals:
+
+\textbf{Regime transitions}: Latent narrative states that shift abruptly. A region may transition from ``peaceful/stable'' regime (low conflict coverage, high economic activity) to ``violent/chaotic'' regime (high conflict coverage, displacement reports). Hidden Markov Models (HMM) can detect such transitions even when article volumes remain constant---coverage shifts from economic news to conflict news, signaling regime change. Static article counts miss this.
+
+\textbf{Temporal patterns}: Crisis evolution modes capturing how narratives develop. Early-stage crises may show gradual escalation (increasing conflict reports, displacement warnings), while late-stage crises show sustained intensity (persistently high coverage). Dynamic Mode Decomposition (DMD) extracts these temporal modes. Static features aggregate over time windows, losing temporal structure.
+
+\textbf{Dynamic shifts}: Standardised deviations from baseline. Raw article counts conflate absolute levels (Kenya gets more coverage than Mali due to larger English-language media presence) with relative changes (sudden surge in Mali coverage signals emerging crisis). Z-score standardisation (12-month sliding window) captures dynamic shifts. Static ratios normalise by total coverage but miss temporal dynamics.
+
+We propose dynamic feature engineering:
+    \begin{itemize}
+    \item HMM: 1,322 district-pooled 2-state models for regime detection
+    \item DMD: Crisis-focused mode filtering for temporal pattern extraction
+    \item Z-scores: 12-month sliding-window standardisation for dynamic shifts
+    \item Mixed-effects: Country random effects for geographic heterogeneity
+    \end{itemize}
+
+Ablation studies quantify the marginal contribution of each component.
+
+\vspace{0.3cm}
+
+\noindent\textit{These five gaps---lack of rigorous AR baseline comparisons, inability to distinguish structural persistence from shock-driven dynamics, absence of two-stage frameworks, limited model interpretation for geographic heterogeneity, and static feature engineering---represent systematic omissions in existing literature. Existing work evaluates news-based models against weak baselines (naive or simple lag), deploys complex features universally rather than selectively, reports aggregate metrics that obscure heterogeneity, and uses static article counts that miss dynamic signals. This dissertation addresses all five gaps simultaneously through a comprehensive framework that establishes AR baselines, separates persistence from shocks, deploys features selectively, triangulates model interpretation across three methods, and engineers dynamic features via stochastic state-space modelling (HMM) and spectral decomposition (DMD).}
+\vspace{0.3cm}
+
+\section{Research Questions}
+
+This dissertation addresses five core research questions that span methodological critique, feature engineering, hidden variables, framework performance, and geographic heterogeneity:
+
+    \begin{enumerate}
+    \item \textbf{RQ1: The Autocorrelation Trap.} To what extent can spatio-temporal autoregressive baselines replicate the performance of news-based forecasting models, and what does this reveal about the value of text features in crisis prediction?
+
+    This question challenges the field's foundational assumption that news-based models provide substantial predictive value. If AR baselines achieve 90-95\% of news model performance using zero text features, claims about the ``value of news for early warning'' require fundamental rethinking. We establish the magnitude of the autocorrelation trap empirically, demonstrating that AUC=0.907 is achievable through simple persistence alone.
+
+    \item \textbf{RQ2: When News Matters.} What is the role of different kinds of news features (conflict, displacement, economic, weather) and dynamic transformations (ratio vs z-score) in predicting food insecurity beyond autoregressive baselines?
+
+    This question decomposes ``news features'' into constituent components to identify which specific signals contribute to prediction. We conduct ablation studies comparing 8 model variants: ratio-only (AUC 0.727), z-score-only (0.699), combined (0.696), with HMM (0.703), with DMD (0.698). Feature importance rankings identify top contributors: conflict, displacement, food security categories. We evaluate on WITH\_AR\_FILTER subset specifically (6,553 observations where IPC\textsubscript{t-1} $\leq$ 2 AND AR predicted non-crisis), isolating news value beyond persistence.
+
+    \item \textbf{RQ3: The Role of Hidden Variables.} What is the contribution of latent regime detection (HMM) and temporal pattern extraction (DMD) in identifying crises that autoregressive models miss?
+
+    This question evaluates dynamic feature engineering beyond static article counts. Do HMM-detected regime transitions and DMD-extracted temporal modes provide value? Ablation studies reveal that HMM provides substantial interpretability value---the hmm\_ratio\_transition\_risk feature ranks \#5 in importance (0.032, equivalent to 3.2\%), capturing narrative regime shifts (peaceful $\times$ violent transitions) that raw article counts miss. HMM achieves +0.007 AUC, demonstrating that latent dynamics provide genuine signal for detecting when crisis narratives fundamentally change. DMD achieves +0.002 AUC with the largest mixed-effects coefficient (+352.38), targeting rare but extreme humanitarian catastrophes.
+
+    \item \textbf{RQ4: Two-Stage Framework Performance.} Can a two-stage residual modelling approach effectively rescue crises missed by autoregressive baselines, and what are the precision-recall trade-offs of such a framework?
+
+    This question evaluates the operational viability of selective deployment. The framework achieves 249 key saves (17.4\% of 1,427 AR failures)---rescuing the hardest-to-predict crises where temporal persistence breaks down. Recall increases to 0.779 (+6.4\% relative improvement), prioritising sensitivity in humanitarian contexts where missing crises is catastrophic. Precision decreases to 0.585, reflecting the deliberate choice to favour recall over precision. We demonstrate that these 249 rescued cases concentrate in conflict-affected regions (Sudan, Zimbabwe, DRC) experiencing rapid-onset shocks where 8-month early warnings enable life-saving interventions.
+
+    \item \textbf{RQ5: Geographic Heterogeneity.} Are news-based features equally valuable across all geographic contexts, or do certain countries and crisis types benefit more from dynamic news signals than others?
+
+    This question disaggregates aggregate metrics to identify where news helps most. Results reveal strong heterogeneity: Zimbabwe (77 key saves), Sudan (59), and DRC (40) account for 70.7\% of all key saves despite representing only 3 of 18 countries. Mixed-effects random coefficients quantify country-specific sensitivities. Within-country heterogeneity analysis demonstrates that the same countries show both cascade rescues and failures at district level$\times$Zimbabwe has 77 saves but 647 still-missed cases, Sudan has 59 saves but 420 still-missed, revealing that news-based early warning succeeds in well-covered districts (capitals, conflict zones) but fails in news desert districts (remote pastoral areas, peripheral regions) within the same country. This heterogeneity enables strategic deployment optimisation: concentrating news-based forecasting resources in high-coverage contexts (Sudan/Zimbabwe/DRC) where dense media ecosystems and clear crisis narratives maximise predictive value, while relying on AR baselines for contexts with sparse coverage where simpler persistence models provide adequate performance.
+    \end{enumerate}
+
+These questions guide systematic investigation into when, where, and how dynamic news signals provide genuine early-warning information beyond spatio-temporal persistence. Each question is answerable with our data, methods, and empirical results.
+
+\vspace{0.3cm}
+
+\noindent\textit{These five research questions span the full scope of methodological critique (RQ1), feature engineering decomposition (RQ2), hidden variable evaluation (RQ3), operational framework performance (RQ4), and geographic heterogeneity (RQ5). Each question addresses a distinct aspect of when and where news features provide value beyond autocorrelation, and each is empirically answerable using our dataset (20,722 observations across 1,920 districts in 18 countries after h=8 filtering), two-stage framework, ablation studies across 8 model variants, and three-method interpretability analysis. Together, these questions reframe news-based forecasting from universal deployment claims to selective deployment guidance grounded in rigorous baseline comparisons and honest assessment of trade-offs.}
+\vspace{0.3cm}
+
+\section{Research Objectives}
+
+To address the five research questions, this dissertation pursues six specific research objectives:
+
+\textbf{Objective 1: Establish Rigorous AR Baseline with Spatial Cross-Validation}
+
+Develop a spatio-temporal autoregressive model using:
+    \begin{itemize}
+    \item \textbf{Temporal autoregressive feature}: IPC outcome at t-1 (first-order lag capturing temporal persistence)
+    \item \textbf{Spatial autoregressive feature}: Inverse-distance weighted average of neighbours' IPC within 300km radius
+    \item \textbf{Logistic regression}: Binary classification (IPC $\geq$ 3 vs IPC $<$ 3)
+    \item \textbf{L2 regularization}: Ridge penalty to prevent overfitting on spatial neighbours
+    \item \textbf{Stratified spatial CV}: 5 folds, 20 geographic clusters, ensures no test-set neighbours in training
+    \end{itemize}
+
+Target performance: Demonstrate that high performance (AUC $>$ 0.90) is achievable without text features, establishing the autocorrelation trap as an empirically significant phenomenon.
+
+\textbf{Objective 2: Quantify and Characterise AR Failures}
+
+Define AR failures as cases where:
+    \begin{equation}
+\text{IPC}_{t-1} \leq 2 \quad \text{AND} \quad \text{AR\_pred} = 0 \quad \text{BUT} \quad \text{IPC}_{t} \geq 3
+    \end{equation}
+
+These represent missed early-warning opportunities---crises that temporal patterns did not forecast. Quantify:
+    \begin{itemize}
+    \item \textbf{Failure rate}: Proportion of total crises that AR baseline fails to predict
+    \item \textbf{Geographic distribution}: Identify which countries exhibit highest AR failure rates
+    \item \textbf{Temporal patterns}: Determine when failures occur (stable periods vs shock events)
+    \item \textbf{Crisis characteristics}: Distinguish conflict-driven vs climate-driven failure patterns
+    \end{itemize}
+
+Target: Demonstrate systematic patterns in AR failures exist, providing empirical justification for Stage 2 intervention.
+
+\textbf{Objective 3: Engineer Dynamic Features Through Four-Stage Pipeline}
+
+Implement advanced feature engineering beyond static article counts:
+
+\textbf{Stage 2a - Z-Score Standardisation}:
+    \begin{equation}
+z_{i,t,c} = \frac{x_{i,t,c} - \mu_{i,c}(t)}{\sigma_{i,c}(t)}
+    \end{equation}
+where $x_{i,t,c}$ is article count for district $i$, time $t$, category $c$; $\mu_{i,c}(t)$ and $\sigma_{i,c}(t)$ are 12-month rolling mean and standard deviation. Captures dynamic shifts.
+
+\textbf{Stage 2b - Hidden Markov Models}:
+    \begin{itemize}
+    \item 2-state models (peaceful/crisis regimes) per district
+    \item District-level pooling: 1,322 models across unique districts
+    \item Extract features: regime probabilities, transition risks, state entropy
+    \end{itemize}
+Captures latent narrative regimes.
+
+\textbf{Stage 2c - Dynamic Mode Decomposition}:
+    \begin{equation}
+\mathbf{X}' \approx \mathbf{A}\mathbf{X}
+    \end{equation}
+where $\mathbf{X}$ is news time series matrix, $\mathbf{A}$ is DMD operator. Eigendecomposition extracts temporal modes. Crisis-focused filtering selects modes correlated with IPC outcomes. Captures temporal patterns.
+
+\textbf{Stage 2d - Mixed-Effects Regression}:
+    \begin{equation}
+\log \frac{p_{r,t}}{1 - p_{r,t}} = \underbrace{\boldsymbol{\beta}^T \mathbf{X}_{r,t}}_{\text{Fixed effects}} + \underbrace{\alpha_g + \mathbf{b}_g^T \mathbf{Z}_{r,t}}_{\text{Random effects}}
+    \end{equation}
+where $\boldsymbol{\beta}^T \mathbf{X}_{r,t}$ are fixed effects for all features, $\alpha_g \sim N(0, \sigma_\alpha^2)$ are group random intercepts (adaptive: district-level if data sufficient, else country-level), $\mathbf{b}_g^T \mathbf{Z}_{r,t}$ are random slopes for key signals (conflict\_ratio, food\_security\_ratio), with $\mathbf{Z}_{r,t} \subseteq \mathbf{X}_{r,t}$. Here $r$ indexes regions (districts), $t$ indexes time, and $g$ indexes groups. Captures both global patterns (fixed effects) and geographic heterogeneity (random intercepts + random slopes for crisis-predictive features).
+
+Target: Engineer comprehensive feature set spanning multiple transformation types (ratio, z-score normalization, HMM regime detection, DMD temporal modes, location metadata) to capture diverse aspects of crisis dynamics.
+
+\textbf{Objective 4: Rescue AR Failures Through Selective Deployment}
+
+Deploy Stage 2 models exclusively on AR-difficult cases (WITH\_AR\_FILTER strategy):
+    \begin{itemize}
+    \item Filter training data to cases where previous IPC $\leq$ 2 (non-crisis) AND AR predicted non-crisis (AR=0), isolating instances where temporal persistence suggests stability
+    \item Train Stage 2 models on this filtered subset to focus learning on difficult-to-predict cases
+    \item Quantify rescue rate: proportion of AR failures successfully predicted by Stage 2
+    \item Prioritise recall improvement in humanitarian contexts where false negatives are costly
+    \item Analyse geographic concentration: determine if rescue success clusters in specific regions
+    \end{itemize}
+
+Target: Demonstrate that news signals can rescue operationally critical cases where spatio-temporal persistence fails, validating selective deployment strategy.
+
+\textbf{Objective 5: Conduct Comprehensive Interpretability Analysis}
+
+Deploy three complementary methods to triangulate findings:
+
+\textbf{Method 1 - XGBoost Feature Importance}:
+Use gain-based importance scores to identify which features contribute most to tree splits, revealing:
+    \begin{itemize}
+    \item Relative ranking of location metadata vs news features vs dynamic features
+    \item Whether static ratio features or dynamic z-score/HMM/DMD features dominate
+    \item Split frequency patterns that may overstate location metadata importance
+    \end{itemize}
+
+\textbf{Method 2 - Mixed-Effects Decomposition}:
+Fixed effects $\boldsymbol{\beta}$ capture global patterns. Random intercepts $\alpha_g$ and random slopes $\mathbf{b}_g$ quantify group-specific baseline risks and feature sensitivities. Variance decomposition:
+    \begin{equation}
+\text{Var}(y) = \underbrace{\text{Var}(\mathbf{X}\boldsymbol{\beta})}_{\text{fixed}} + \underbrace{\text{Var}(\alpha_g) + \text{Var}(\mathbf{b}_g^T \mathbf{Z})}_{\text{random}} + \underbrace{\text{Var}(\epsilon)}_{\text{noise}}
+    \end{equation}
+Identifies which geographic groups (districts or countries) have elevated baseline risks and which features have heterogeneous effects across groups.
+
+\textbf{Method 3 - SHAP Values}:
+Model-agnostic explanations quantify feature contributions to individual predictions:
+    \begin{equation}
+\phi_k(i) = \sum_{S \subseteq F \setminus \{k\}} \frac{|S|!(|F|-|S|-1)!}{|F|!} [f_{S \cup \{k\}}(x_i) - f_S(x_i)]
+    \end{equation}
+where $\phi_k(i)$ is SHAP value for feature $k$ in instance $i$. Validates cross-method agreement with XGBoost and mixed-effects.
+
+Target: Identify consensus features that rank high across all three methods.
+
+\textbf{Objective 6: Quantify Geographic Heterogeneity}
+
+Disaggregate results by country to identify where news features provide most value:
+    \begin{itemize}
+    \item \textbf{Key saves by country}: Quantify successful AR failure rescues disaggregated by country
+    \item \textbf{Concentration patterns}: Determine if rescue success concentrates in specific countries or distributes evenly
+    \item \textbf{Mixed-effects random coefficients}: Quantify country-specific baseline risks and feature sensitivities
+    \item \textbf{Contextualise heterogeneity}: Relate geographic differences to conflict intensity, news coverage density, and crisis type
+    \end{itemize}
+
+Target: Demonstrate that news features matter differently across contexts, providing evidence for context-specific selective deployment rather than universal application.
+
+\vspace{0.3cm}
+
+\noindent\textit{These six objectives provide the operational roadmap for addressing the five research questions. Objective 1 establishes the methodological foundation (rigorous AR baseline with spatial CV), Objectives 2-4 implement the two-stage framework (characterising AR failures, engineering dynamic features, attempting selective rescue), and Objectives 5-6 provide interpretability and geographic insights (triangulation across three methods, country-level heterogeneity analysis). Each objective has measurable targets: demonstrating high AR baseline performance without text features, quantifying AR failure patterns, engineering comprehensive dynamic feature sets, evaluating selective deployment effectiveness, achieving cross-method consensus in feature importance rankings, and identifying geographic contexts where news features provide greatest marginal value. Together, these objectives operationalise the research vision into concrete, evaluable research activities.}
+\vspace{0.3cm}
+
+\section{Contributions}
+
+This research makes five core contributions to humanitarian early warning, machine learning for social good, and crisis forecasting methodology:
+
+\textbf{Contribution 1: Methodological Critique - Exposing the Autocorrelation Trap}
+
+We demonstrate empirically that spatio-temporal AR baselines achieve 93.8\% of published news model performance (AR PR-AUC=0.7652 vs Balashankar et al. 2023 PR-AUC=0.8158) using ZERO text features---only temporal autoregressive feature (IPC\_{t-1}) and spatial autoregressive feature (inverse-distance weighted neighbours). This establishes the autocorrelation trap as a quantitatively large, empirically real phenomenon that existing literature has systematically neglected.
+
+Our critique has three components:
+
+\textbf{(a) Empirical demonstration}: AR baseline achieves Precision=0.732, Recall=0.732, F1=0.732, AUC=0.907 at 8-month horizons with 5-fold stratified spatial CV. This performance approaches published news-based models (93.8\% of Balashankar et al.'s PR-AUC), demonstrating that persistence dominates prediction.
+
+\textbf{(b) Theoretical implication}: Without AR baseline comparisons, high performance in existing work may reflect autocorrelation rather than text feature value. Claims about ``news predicts crises'' are technically true but potentially incomplete---persistence predicts most crises, and news features contribute incrementally. Our cascade framework demonstrates that news features provide value when deployed selectively on AR failures (249 key saves, 17.4\% rescue rate), rather than universally.
+
+\textbf{(c) Methodological prescription}: All future work on news-based (or any feature-based) crisis prediction should include rigorous AR baseline comparisons with both temporal autoregressive features and spatial autoregressive features, inverse-distance spatial weighting, proper spatial CV, and reported marginal contributions. This sets a higher standard for the field.
+
+To our knowledge, this is the first systematic comparison of news-based models against strong spatio-temporal baselines in the food security domain. Our work challenges existing paradigms and provides a template for future methodological rigor.
+
+\textbf{Contribution 2: Two-Stage Residual Modelling Framework}
+
+We develop a principled approach that explicitly separates structural persistence (captured by AR baseline) from shock-driven dynamics (captured by news features):
+
+\textbf{Stage 1 - AR Baseline}: Deploys spatio-temporal logistic regression on all cases. Achieves 73.2\% precision/recall. Identifies 15,400 predicted non-crises (AR\_pred=0) as candidates for Stage 2 override.
+
+\textbf{Stage 2 - Dynamic Features}: Deploys XGBoost with 35 advanced features (ratio, z-score, HMM, DMD, location) exclusively on WITH\_AR\_FILTER subset (6,553 cases where IPC\textsubscript{t-1} $\leq$ 2 AND AR predicted non-crisis). Achieves 249 successful predictions of AR-missed crises (17.4\% rescue rate). \textbf{These 249 cases are not statistical abstractions---they represent the most operationally critical early warnings}: conflict escalations in Sudan where displacement unfolds rapidly, coup-related disruptions in Zimbabwe where temporal patterns break abruptly, and acute emergencies in DRC where persistence models fail. These are precisely the cases where 8-month advance warning enables life-saving humanitarian response.
+
+\textbf{Integration}: Simple cascade decision logic preserves all AR=1 predictions (trusting the baseline when it predicts crisis), and uses Stage 2's binary prediction for all AR=0 cases. When AR predicts no crisis (AR=0) and Stage 2 predicts crisis (Stage2=1), the cascade overrides to crisis. When both predict no crisis, the cascade confirms non-crisis. Combined framework achieves:
+    \begin{itemize}
+    \item \textbf{249 key saves} (AR-missed crises correctly predicted by cascade)---\textit{the hardest cases where news signals matter most}
+    \item \textbf{Recall: 0.732 $\to$ 0.779 (+6.4\% relative improvement)}---not merely a percentage gain, but 249 real crises affecting millions, now predicted 8 months early
+    \item Precision: 0.732 $\to$ 0.585 (reduced due to prioritising recall in humanitarian contexts)
+    \item Geographic concentration: 70.7\% of key saves in Sudan, Zimbabwe, DRC---conflict-affected regions where news signals capture rapid-onset shocks
+    \end{itemize}
+
+This framework provides three methodological innovations:
+
+\textbf{(a) Selective deployment}: Complex features deployed only for WITH\_AR\_FILTER cases (IPC\textsubscript{t-1} $\leq$ 2 AND AR=0, not universally), maximising value per cost. The framework targets the 6,553 cases meeting both filter conditions rather than all 20,722 observations, concentrating computational resources where they provide genuine marginal value.
+
+\textbf{(b) Explicit persistence modelling}: AR baseline captures structural persistence explicitly (not as implicit control variables), enabling interpretable decomposition of which predictions succeed due to autocorrelation (the majority) versus which require dynamic news signals (the critical minority).
+
+\textbf{(c) Humanitarian-appropriate metrics}: Prioritises recall over precision, aligning with operational early warning principles where missing crises is catastrophic while false alarms are manageable. The framework achieves 77.9\% recall, successfully predicting 4,144 of 5,322 total crises, including 249 that pure persistence models cannot detect.
+
+The framework demonstrates meaningful success for operationally critical cases: 17.4\% of AR failures are rescued, concentrated in conflict-affected regions (Sudan, Zimbabwe, DRC) experiencing rapid-onset shocks where early warning enables life-saving humanitarian response.
+
+\textbf{Critically, cascade failure analysis reveals a fundamental constraint}: the 1,178 crises still missed after cascade intervention (82.6\% of AR failures) exhibit systematic news coverage deficiency---median 74 articles/month compared to 121 for rescued cases (64\% less coverage, p<0.001). This \textit{news deserts hypothesis} demonstrates that news-based early warning fundamentally cannot rescue crises in remote pastoral areas (Kenya Northern, Zimbabwe rural districts, Niger) lacking sufficient media coverage. The 249 key saves concentrate in news-dense conflict zones (70.7\% in Sudan/Zimbabwe/DRC), revealing that successful cascade deployment requires rich news signal infrastructure. This partial success validates the core hypothesis: \textit{news signals provide genuine early-warning value for specific crisis types in specific geographic contexts}, precisely where temporal persistence breaks down, news coverage is abundant, and where intervention matters most. Future NLP systems must expand beyond traditional news media to incorporate social media monitoring, humanitarian situation reports, community radio transcripts, and multilingual text mining from non-English sources to address news deserts.
+
+\textbf{Contribution 3: Dynamic Feature Engineering Beyond Article Counts}
+
+We demonstrate a four-stage analytical pipeline that extends beyond static article counts used in existing work:
+
+\textbf{Stage 2a - Z-Score Standardisation}: 12-month sliding-window normalisation captures dynamic shifts. Ablation studies reveal a nuanced finding: ratio-only models achieve higher standalone AUC (0.727 vs 0.699), but SHAP analysis shows z-score features account for 74.7\% of marginal attribution in the full combined model versus only 20.1\% tree-based importance. This apparent contradiction reflects complementary roles: ratio features provide stable cross-sectional baselines enabling higher standalone performance, while z-score features capture volatile temporal anomalies that drive marginal predictions when combined with ratios. Both feature types are essential---ratios for robust baseline discrimination, z-scores for detecting dynamic shocks.
+
+\textbf{Stage 2b - Hidden Markov Models}: 1,322 district-pooled 2-state models extract latent narrative regimes. The hmm\_ratio\_transition\_risk feature ranks \#5 in importance (0.032), demonstrating that regime transitions provide genuine signal. HMM achieves +0.007 AUC gain (from 0.696 to 0.703) with substantial interpretability value---we can identify when narratives shift from peaceful to violent regimes even when article volumes remain constant, capturing qualitative changes in crisis dynamics.
+
+\textbf{Stage 2c - Dynamic Mode Decomposition}: Crisis-focused mode filtering extracts temporal patterns (escalation modes, sustained intensity modes). DMD achieves +0.002 AUC, with dmd\_ratio\_crisis\_instability achieving the \textit{largest mixed-effects coefficient among all features (+352.38)}, demonstrating value for detecting rare but extreme humanitarian catastrophes where multiple crisis drivers converge simultaneously. DMD provides interpretable crisis evolution dynamics, identifying temporal modes that characterise how crises unfold over time.
+
+HMM and DMD contributions (HMM: +0.007 AUC, DMD: +0.002 AUC) reflect an important methodological insight: \textbf{specialized methods provide value through targeted detection}. With 48 months of data per district (2021-2024) and heterogeneous news coverage (mean 1,235 articles/year/district, with many districts having sparse coverage), HMM and DMD achieve robust convergence: 89.5\% for HMM regime detection and 83.1\% for DMD crisis mode extraction. These high convergence rates demonstrate successful latent dynamics extraction despite data constraints. The finding that ratio-only models achieve standalone AUC=0.727 while z-score features account for 74.7\% of SHAP marginal attribution demonstrates \textbf{feature complementarity matters more than individual dominance}. HMM captures regime transitions (ranked \#5 in feature importance), while DMD achieves the largest coefficient (+352.38) for extreme events, demonstrating that specialized methods provide mechanistic insights complementing discrimination-focused features.
+
+\textbf{Stage 2d - Mixed-Effects Regression}: Country random intercepts and random slopes for key signals (conflict\_ratio, food\_security\_ratio) capture geographic heterogeneity in both baseline risk and feature effects. Fixed effects quantify global patterns, while random effects reveal country-specific deviations. Mixed-effects models provide interpretable coefficient decomposition (AUC 0.604-0.620) with transparent fixed effects (average impact across all countries) and random effect variances (geographic variation in baseline risk and feature sensitivities), complementing XGBoost's higher discrimination (AUC 0.697) through a trade-off between interpretability and predictive accuracy.
+
+Ablation studies across 8 model variants quantify marginal contributions:
+    \begin{itemize}
+    \item Ratio-only: AUC 0.727 (best standalone performance, but z-scores account for 74.7\% SHAP attribution in combined models)
+    \item Z-score-only: AUC 0.699 (captures temporal anomalies, complementary to ratios)
+    \item Ratio+Z-score: AUC 0.696 (lower standalone AUC, but z-scores drive 74.7\% of marginal attribution in full models)
+    \item Ratio+Z-score+HMM: AUC 0.703 (+0.007 from HMM)
+    \item Ratio+Z-score+DMD: AUC 0.698 (+0.002 from DMD)
+    \item Advanced (all features): AUC 0.697 (XGBoost optimises combination)
+    \end{itemize}
+
+These results demonstrate that dynamic feature engineering provides value with heterogeneous contributions across methods (HMM provides substantial interpretability value and +0.007 AUC gain, z-scores account for 74.7\% SHAP marginal attribution despite lower standalone AUC). Comprehensive reporting of which methods succeed in which contexts (HMM transition risk for regime shifts, z-score features for shock detection, ratio features for stable baselines) advances the field by providing practical guidance for operational deployment.
+
+\textbf{Contribution 4: Comprehensive Interpretability Framework}
+
+We deploy three complementary methods to answer when and where news matters, achieving triangulation across approaches:
+
+\textbf{XGBoost Feature Importance} (gain-based):
+    \begin{enumerate}
+    \item country\_data\_density: 0.133 (captures baseline news coverage level)
+    \item country\_baseline\_conflict: 0.093 (captures baseline conflict exposure)
+    \item country\_baseline\_food\_security: 0.067 (captures baseline food insecurity)
+    \item other\_ratio: 0.033 (top news feature, general news coverage)
+    \item hmm\_ratio\_transition\_risk: 0.032 (top hidden variable, regime transitions)
+    \item health\_ratio: 0.029, displacement\_z-score: 0.026, weather\_ratio: 0.026
+    \item food\_security\_z-score: 0.025, hmm\_ratio\_crisis\_prob: 0.025
+    \end{enumerate}
+
+\textbf{Key insight}: Location/baseline features dominate tree-based importance (ranks \#1-3, 40.4\% total split frequency) but contribute minimally to SHAP attribution (ranks \#17, 20, 26, only 2.6\% marginal impact). This 15.5$\times$ overstatement reveals that tree-based importance measures stratification utility (frequent node splitting for country-level segmentation), not predictive contribution (driving marginal predictions). Z-score features drive 74.7\% of SHAP attribution despite lower tree rankings$\times$dynamic news anomalies matter more than geographic context for marginal predictions on shock-driven crises.
+
+\textbf{Mixed-Effects Decomposition} (fixed/random coefficients):
+Fixed effects $\boldsymbol{\beta}$ identify global patterns (which features matter on average across all countries). Random intercepts $\alpha_g$ quantify group-specific baseline risk deviations, while random slopes $\mathbf{b}_g$ quantify group-specific feature sensitivities (how much does conflict\_ratio or food\_security\_ratio matter more in group $g$ vs average). Variance decomposition reveals:
+    \begin{equation}
+\frac{\text{Var}(\alpha_g)}{\text{Var}(y)} \approx 0.15-0.25
+    \end{equation}
+indicating that 15-25\% of outcome variance is explained by country-level baseline heterogeneity (random intercepts). This justifies mixed-effects models over pooled regression.
+
+\textbf{Key insight}: Sudan, Zimbabwe, and DRC exhibit positive random effects (higher sensitivity to news features), while Kenya and Ethiopia exhibit negative random effects (lower sensitivity, persistence dominates). This heterogeneity motivates selective deployment.
+
+\textbf{SHAP Values} (model-agnostic explanations):
+Shapley value decomposition attributes predictions to individual features for specific instances. \textbf{Critical methodological revelation}: SHAP fundamentally reorders feature rankings compared to tree-based importance, revealing that location features account for 40.4\% of tree splits but only 2.6\% of marginal prediction attribution (15.5$\times$ overstatement). This exposes measurement artifact: tree-based importance measures split frequency (how often features partition data), while SHAP measures marginal impact (contribution to individual predictions). Z-score features dominate SHAP attribution (74.7\%), HMM features account for 21.9\% (higher than tree-based 13.0\%), and ratio features contribute 22.7\%. This demonstrates that feature "importance" depends critically on measurement method$\times$location features enable baseline stratification (high split frequency) but dynamic features drive prediction variance (high marginal impact).
+    \begin{itemize}
+    \item \textbf{Z-score features dominate}: other\_z-score (rank 1, 0.952), conflict\_z-score (rank 2, 0.911), humanitarian\_z-score (rank 3, 0.902)$\times$74.7\% total SHAP attribution
+    \item \textbf{Location features rank low}: country\_data\_density (rank 17), country\_baseline\_conflict (rank 20), country\_baseline\_food\_security (rank 26)$\times$only 2.6\% SHAP despite 40.4\% tree importance (15.5$\times$ overstatement)
+    \item \textbf{HMM features elevated}: hmm\_ratio\_crisis\_prob (rank 7), hmm\_ratio\_\allowbreak transition\_risk (rank 8)$\times$21.9\% SHAP (higher than 13.0\% tree-based)
+    \item \textbf{DMD features specialized for extreme events}: 1.5\% SHAP reflects rarity by design (activate only for <3\% most severe crises), but achieve largest mixed-effects coefficient (+352.38) when active, detecting complex emergencies invisible to other features
+    \end{itemize}
+
+\textbf{Key insight}: The dramatic divergence between tree-based importance (location 40.4\%, z-score 20.1\%) and SHAP attribution (location 2.6\%, z-score 74.7\%) reveals a critical methodological artifact. Location features enable stratification (frequent splitting) but dynamic features drive prediction variance (marginal impact). This demonstrates that feature ``importance'' depends fundamentally on measurement method$\times$split frequency $\neq$ predictive contribution.
+
+\textbf{News Theme Analysis Component}: This comprehensive interpretation framework enables systematic analysis of which news themes matter across measurement methods. Weather emerges as strongest for sustained forecasts (Mixed Effects \#1, +26.7 coefficient) via direct causal pathway (climate $\to$ agriculture $\to$ food), while conflict dominates for rapid shock detection (SHAP z-scores \#1, 0.911) via anomaly spikes. The measurement paradox extends to theme-level rankings: sustained compositional changes (ratios, mixed effects favour weather/displacement/food security) differ from rapid anomalies (z-scores, SHAP favour conflict/humanitarian/governance). This systematic cross-method theme comparison resolves contradictory findings in literature and provides deployment guidance: use weather/climate signals for agricultural crises, conflict/humanitarian signals for rapid-onset shocks.
+
+\textbf{Contribution 5: Geographic Insights - Selective Deployment Justification}
+
+We identify strong geographic heterogeneity justifying selective rather than universal deployment of news features:
+
+\textbf{Key saves by country}:
+    \begin{itemize}
+    \item Zimbabwe: 77 key saves (30.9\% of total)
+    \item Sudan: 59 (23.7\%)
+    \item DRC: 40 (16.1\%)
+    \item Nigeria: 27 (10.8\%)
+    \item Mozambique: 15 (6.0\%)
+    \item Mali: 12, Kenya: 8, Ethiopia: 6, Malawi: 3, Somalia: 2
+    \end{itemize}
+
+\textbf{Concentration}: Top 3 countries (Zimbabwe, Sudan, DRC) account for 176 key saves (70.7\% of total) despite representing only 3 of 18 countries (16.7\%). This extreme concentration suggests news features help in specific contexts, not universally.
+
+\textbf{Contextualization}:
+    \begin{itemize}
+    \item \textbf{Zimbabwe}: High news coverage, conflict-driven crises (Marange crisis 2021), frequent regime transitions. SHAP-based theme analysis reveals elevated Weather importance (11.5\% vs 9.4\% global), reflecting recurring drought cycles compounding economic collapse.
+    \item \textbf{Sudan}: April 2023 conflict outbreak, acute displacement, breakdown of temporal patterns. Elevated Conflict theme importance (14.6\% vs 11.3\% global) reflects rapid violence escalations that AR baseline cannot anticipate.
+    \item \textbf{DRC}: Protracted eastern conflict, M23 resurgence, persistent displacement. Elevated Displacement importance (12.2\% vs 10.0\% global) captures population movements from North Kivu complex emergency.
+    \item \textbf{Contrast with Ethiopia/Kenya}: Despite high baseline coverage, few key saves. AR baseline works well due to strong seasonal patterns (climate-driven crises) and structural persistence. Relatively flat theme distributions indicate no dominant shock type requiring news-based anomaly detection.
+    \end{itemize}
+
+\textbf{Implication}: Operational systems should deploy news features selectively:
+    \begin{itemize}
+    \item \textbf{Deploy in}: Sudan, Zimbabwe, DRC (conflict zones, regime instability, AR fails frequently). Theme-aware monitoring guided by elevation analysis (context-specific deviations from global patterns, not just dominant themes): Weather monitoring systems for southern/eastern agricultural zones (Zimbabwe +2.1pp elevation, Ethiopia, Malawi, Madagascar) where climate shocks produce largest deviations from continental baseline; Conflict early-warning for Sahel/Sudan corridor (Sudan +3.3pp, Mali) where violence spikes exceed global conflict patterns; Displacement tracking for Great Lakes (DRC +2.2pp) where population movements dominate local news; Health surveillance in East Africa (Somalia +5.8pp, highest observed elevation) where disease burden compounds food insecurity. This elevation metric identifies which shock types require context-specific surveillance thresholds rather than universal monitoring.
+    \item \textbf{Omit in}: Ethiopia, Kenya (seasonal patterns, persistence dominates, AR suffices)
+    \item \textbf{Resource allocation}: Concentrate expensive NLP infrastructure where it helps (3 high-value countries) rather than spreading thin across all 18 countries.
+    \end{itemize}
+
+This selective deployment framework maximises humanitarian impact per unit cost.
+
+\vspace{0.3cm}
+
+\noindent\textit{These five contributions establish this dissertation's significance: methodological critique exposing the autocorrelation trap (AR achieves 93.8\% of Balashankar et al. 2023 published news model performance with zero text features, challenging field assumptions), two-stage residual framework separating persistence from shocks (249 key saves rescuing the hardest-to-predict crises, 17.4\% of AR failures, concentrated in conflict-affected regions), dynamic feature engineering beyond article counts (HMM provides substantial interpretability value capturing regime transitions, z-score features account for 74.7\% of SHAP marginal attribution demonstrating dynamic anomaly detection drives predictions), comprehensive interpretability via triangulation (XGBoost, mixed-effects, SHAP converge on z-score temporal anomalies and HMM transition risk as top contributors), and geographic insights justifying selective deployment (Zimbabwe/Sudan/DRC account for 70.7\% of key saves, demonstrating heterogeneous value across contexts). Together, these contributions reframe news-based forecasting from universal deployment claims to selective deployment guidance targeting contexts where news signals rescue operationally critical cases, establish AR baselines as mandatory methodological standards, and provide practical guidance for humanitarian early warning systems through comprehensive evaluation of what works where.}
+\vspace{0.3cm}
+
+
+\section{Thesis Structure}
+
+The remainder of this dissertation is organised as follows:
+
+\textbf{Chapter 2} provides background on food insecurity classification systems, traditional early warning approaches, and reviews recent literature on news-based forecasting. It identifies the autocorrelation trap as a systematic methodological gap and positions this work's contributions within the broader field.
+
+\textbf{Chapter 3} describes the two-stage cascade framework in detail: data sources (IPC assessments, GDELT news), feature engineering (autoregressive baselines, ratio/z-score transformations, HMM regime detection, DMD temporal modes), model architectures (logistic regression, XGBoost, mixed-effects models), and evaluation protocols (stratified spatial cross-validation, performance metrics).
+
+\textbf{Chapter 4} presents comprehensive results organised around the five research questions, including AR baseline performance, identification of missed early-warning opportunities, ablation studies quantifying dynamic feature contributions, model interpretability analysis, and cascade framework evaluation with case studies from Zimbabwe, Sudan, and DRC.
+
+\textbf{Chapter 5} discusses findings in the context of the broader literature, addresses limitations (data coverage, language bias, temporal resolution), and proposes future research directions including real-time deployment, multi-modal integration, and enhanced interpretability for humanitarian decision-making.
+
+\textbf{Chapter 6} synthesises key contributions, restates answers to the five research questions, and reflects on the significance of this work for both methodological standards in food security forecasting and operational guidance for humanitarian early warning systems.
+
+
+

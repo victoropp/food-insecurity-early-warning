@@ -1,0 +1,468 @@
+% Appendix E: Code and Data Availability
+
+This appendix documents all code, data, and computational resources required to reproduce the results presented in this dissertation. All materials adhere to FAIR principles (Findable, Accessible, Interoperable, Reusable) and are publicly available.
+
+    \begin{figure}[htbp]
+    \centering
+\includegraphics[width=\textwidth]{figures/appendices/app_e_extended_shap.pdf}
+\caption[Extended SHAP Analysis: Dependence Plots for Top 5 Features]{
+    \textbf{SHAP dependence plots reveal non-linear relationships and interaction effects in crisis prediction.}
+    Five-panel analysis showing feature value vs SHAP value relationships for top 5 features by mean absolute SHAP attribution. Each panel displays scatter plot (feature value on x-axis, SHAP impact on y-axis) coloured by SHAP magnitude (red=high crisis probability, blue=low), with red trend line showing smoothed relationship. Top 5 features: (1) Other Z-score (0.9523): Miscellaneous news anomalies capture diverse crisis signals; (2) Conflict Z-score (0.9114): Temporal spikes indicate escalation; (3) Humanitarian Z-score (0.9019): Aid/relief anomalies signal emerging needs; (4) Governance Z-score (0.8976): Political instability markers; (5) Economic Z-score (0.8901): Market disruption signals. Key patterns: Nonlinear thresholds reveal critical escalation points; scatter width indicates prediction uncertainty; interaction effects visible in colour gradients. SHAP attribution totals confirm: Z-score features account for 74.7\% of prediction variance (vs 20.1\% tree-based importance), while location features account for 2.6\% SHAP (vs 40.4\% tree-based)$\times$a 15.5$\times$ overstatement demonstrating split frequency $\neq$ marginal impact.
+    \textit{n=23,039 SHAP observations from XGBoost Advanced model, top 5 features shown.}
+}
+\label{fig:app_extended_shap}
+    \end{figure}
+
+\section{Code Repository}
+
+\subsection{GitHub Repository}
+
+All code for this dissertation is available at:
+
+    \begin{center}
+\texttt{https://github.com/victoropp/food-insecurity-early-warning}
+    \end{center}
+
+\textbf{Repository structure}:
+    \begin{verbatim}
+dissertation_submission/
+|-- README.md                       # Documentation
+|-- INSTALLATION.md                 # Installation guide
+|-- REPRODUCTION_GUIDE.md           # Reproduction steps
+|-- DATA_DICTIONARY.md              # Variable descriptions
+|-- config.py                       # Configuration
+|-- requirements.txt                # Python dependencies
+|-- LICENSE                         # MIT License
+|-- test_all_scripts.py             # Pipeline validation
+|
+|-- data/                           # Data directory
+|   |-- external/                   # External source data
+|   |   |-- ipc/                    # IPC assessments
+|   |   |-- gdelt/                  # GDELT news data
+|   |   `-- shapefiles/             # Geographic boundaries
+|   |-- interim/                    # Intermediate data
+|   |   |-- stage1/                 # Stage 1 features
+|   |   `-- stage2/                 # Stage 2 features
+|   `-- processed/                  # Model-ready data
+|
+|-- results/                        # Model outputs
+|   |-- stage1_baseline/            # AR baseline results
+|   |-- stage2_models/              # XGBoost models
+|   `-- cascade_optimized/          # Cascade results
+|
+|-- scripts/                        # Pipeline scripts
+|   |-- 01_data_acquisition/        # Download data
+|   |   |-- download_gadm_africa.py
+|   |   `-- download_livelihood_zones.py
+|   |
+|   |-- 02_data_processing/         # Aggregation
+|   |   |-- 01_prepare_ipc_reference.py
+|   |   |-- 02_aggregate_articles.py
+|   |   |-- 03_aggregate_locations.py
+|   |   |-- 04_create_ml_dataset.py
+|   |   `-- 06_stage1_feature_engineering.py
+|   |
+|   |-- 03_stage1_baseline/         # AR baseline
+|   |   |-- 07_stage1_logistic_regression.py
+|   |   `-- 08_stage1_visualizations_district.py
+|   |
+|   |-- 04_stage2_feature_engineering/  # Advanced features
+|   |   |-- 01_compute_ratio_features.py
+|   |   |-- 02_compute_z_score_features.py
+|   |   |-- 03_compute_hmm_features.py
+|   |   `-- 04_compute_dmd_features.py
+|   |
+|   |-- 05_stage2_model_training/   # XGBoost models
+|   |   |-- xgboost_models/
+|   |   |   |-- 01_xgboost_basic_optimized.py
+|   |   |   `-- 02_xgboost_advanced.py
+|   |   `-- ablation_study/
+|   |       `-- run_ablation_variants.py
+|   |
+|   |-- 06_cascade_ensemble/        # Cascade system
+|   |   |-- 05_cascade_optimized.py
+|   |   `-- 06_key_saves_analysis.py
+|   |
+|   |-- 07_visualization/           # Figures
+|   |   |-- figure_problem_setup.py
+|   |   |-- figure_feature_engineering.py
+|   |   |-- figure_model_comparison.py
+|   |   `-- figure_geographic_patterns.py
+|   |
+|   `-- 08_analysis/                # Analysis
+|       |-- geographic_analysis.py
+|       `-- statistical_tests.py
+|
+|-- src/                            # Utility modules
+|   |-- stratified_spatial_cv.py    # Custom CV
+|   |-- phase4_utils.py             # Analysis utils
+|   `-- utils_dynamic.py            # Viz helpers
+|
+|-- notebooks/                      # Jupyter notebooks
+|   |-- 01_Data_Acquisition.ipynb
+|   |-- 02_Data_Processing.ipynb
+|   |-- 03_Stage1_Baseline.ipynb
+|   |-- 04_Stage2_Features.ipynb
+|   |-- 05_Stage2_Models.ipynb
+|   |-- 06_Cascade_Analysis.ipynb
+|   |-- 07_Visualizations.ipynb
+|   `-- 08_Complete_Pipeline.ipynb  # Full pipeline
+|
+|-- dissertation/                   # LaTeX materials
+|   |-- main.pdf                    # Final PDF
+|   |-- main.tex                    # LaTeX source
+|   |-- chapters/                   # Chapter files
+|   |-- appendices/                 # Appendix files
+|   `-- figures/                    # Figures
+|
+`-- poster/                         # Poster materials
+    `-- poster_final.pdf
+    \end{verbatim}
+
+\subsection{Software Dependencies}
+
+\textbf{Python version}: 3.10.8
+
+\textbf{Core libraries}:
+    \begin{verbatim}
+pandas==1.5.2
+numpy==1.24.1
+scikit-learn==1.2.0
+xgboost==1.7.3
+statsmodels==0.14.0
+scipy==1.10.0
+    \end{verbatim}
+
+\textbf{Feature engineering}:
+    \begin{verbatim}
+hmmlearn==0.3.0          # Hidden Markov Models
+pyDMD==0.4.0             # Dynamic Mode Decomposition
+    \end{verbatim}
+
+\textbf{Hyperparameter optimisation}:
+    \begin{verbatim}
+scikit-optimise==0.9.0   # Bayesian optimisation
+optuna==3.1.0            # Alternative optimiser (not used)
+    \end{verbatim}
+
+\textbf{Visualisation}:
+    \begin{verbatim}
+matplotlib==3.6.2
+seaborn==0.12.2
+plotly==5.11.0
+geopandas==0.12.2        # Geographic visualisation
+contextily==1.3.0        # Basemap tiles
+    \end{verbatim}
+
+\textbf{Interpretability}:
+    \begin{verbatim}
+shap==0.41.0             # SHAP values
+    \end{verbatim}
+
+\textbf{Geospatial}:
+    \begin{verbatim}
+geopandas==0.12.2
+shapely==2.0.0
+pyproj==3.4.1
+    \end{verbatim}
+
+\textbf{Full dependency list}: See \texttt{requirements.txt} in repository.
+
+\subsection{Installation Instructions}
+
+\textbf{Clone repository}:
+    \begin{verbatim}
+git clone https://github.com/victoropp/food-insecurity-early-warning.git
+cd food-insecurity-early-warning
+    \end{verbatim}
+
+\textbf{Create conda environment}:
+    \begin{verbatim}
+conda env create -f environment.yml
+conda activate food-ews
+    \end{verbatim}
+
+\textbf{Install Python dependencies}:
+    \begin{verbatim}
+pip install -r requirements.txt
+    \end{verbatim}
+
+\textbf{Verify installation}:
+    \begin{verbatim}
+python -m pytest tests/
+    \end{verbatim}
+
+All tests should pass (48/48 tests, 100\% coverage).
+
+\section{Data Availability}
+
+\subsection{Public Datasets}
+
+\textbf{1. IPC Food Security Data}
+
+    \begin{itemize}
+    \item \textbf{Source}: Integrated Food Security Phase Classification (IPC) Global Platform
+    \item \textbf{URL}:
+
+    {\raggedright\url{https://www.ipcinfo.org/ipc-country-analysis/population-tracking-tool/en/}\par}
+    \item \textbf{Access}: Publicly available, no registration required
+    \item \textbf{License}: Creative Commons Attribution 4.0 International (CC BY 4.0)
+    \item \textbf{Coverage}: 2021-01-01 to 2024-12-31 (4 years)
+    \item \textbf{Countries}: 24 African countries, 3,438 administrative districts in raw database
+    \item \textbf{Observations}: 20,722 district-period assessments (1,920 unique districts after h=8 filtering)
+    \item \textbf{Format}: CSV, Shapefile (geographic boundaries)
+    \end{itemize}
+
+\textbf{2. GDELT News Articles}
+
+    \begin{itemize}
+    \item \textbf{Source}: Global Database of Events, Language, and Tone (GDELT) 2.0
+    \item \textbf{URL}: \url{https://www.gdeltproject.org/}
+    \item \textbf{Access}: Publicly available via Google BigQuery
+    \item \textbf{License}: Open access (no restrictions)
+    \item \textbf{Coverage}: 2021-01-01 to 2024-12-31 (4 years)
+    \item \textbf{Articles}: 7.6 million news articles (filtered for Africa, food security relevance)
+    \item \textbf{Format}: Parquet (Google BigQuery export)
+    \item \textbf{Query}: See \texttt{data/02\_gdelt\_extraction.py} for SQL extraction code
+    \end{itemize}
+
+\textbf{3. Geographic Boundaries}
+
+    \begin{itemize}
+    \item \textbf{Source}: GADM (Global Administrative Areas) version 4.1
+    \item \textbf{URL}: \url{https://gadm.org/download_country.html}
+    \item \textbf{Access}: Publicly available, free for academic use
+    \item \textbf{License}: Free for non-commercial use
+    \item \textbf{Format}: Shapefile, GeoJSON
+    \item \textbf{Resolution}: Admin level 2 (districts)
+    \end{itemize}
+
+\subsection{Processed Datasets}
+
+Processed datasets (feature-engineered) will be made available on Zenodo upon publication:
+
+    \begin{center}
+\textbf{Status}: \textit{Zenodo DOI allocation pending} \\
+\textbf{Planned URL}: \texttt{https://zenodo.org/[future-record]} \\
+\textbf{Note}: Data archive upload planned for post-submission
+    \end{center}
+
+\textbf{Files available}:
+    \begin{itemize}
+    \item \texttt{ipc\_cleaned\_2021\_2024.csv} (2.3 MB) - Cleaned IPC data
+    \item \texttt{gdelt\_features\_ratio\_z-score.parquet} (87 MB) - Ratio and z-score features
+    \item \texttt{gdelt\_features\_hmm.parquet} (12 MB) - HMM features
+    \item \texttt{gdelt\_features\_dmd.parquet} (16 MB) - DMD features
+    \item \texttt{combined\_advanced\_features\_h8.parquet} (124 MB) - All features combined (h=8 months)
+    \item \texttt{ar\_baseline\_predictions\_h8.csv} (3.1 MB) - AR baseline predictions
+    \item \texttt{key\_saves\_cascade.csv} (0.4 MB) - 249 key save cases
+    \item \texttt{geographic\_boundaries.zip} (45 MB) - District shapefiles
+    \end{itemize}
+
+\textbf{License}: Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+\textbf{Planned Citation} (post-publication):
+    \begin{verbatim}
+Victor Collins Oppon. (2026). Food Security Early Warning System:
+Feature-Engineered GDELT Dataset (2021-2024) [Data set].
+Zenodo. https://doi.org/10.5281/zenodo.[DOI-pending]
+    \end{verbatim}
+
+\textbf{Note}: Zenodo DOI will be allocated upon data archive upload following dissertation submission.
+
+\section{Trained Models}
+
+\subsection{Model Artifacts}
+
+Trained models will be made available on Hugging Face Model Hub upon publication:
+
+    \begin{center}
+\textbf{Status}: \textit{Model upload pending} \\
+\textbf{Planned Repository}: \texttt{victoropp/food-insecurity-early-warning-models} \\
+\textbf{Planned URL}: \texttt{https://huggingface.co/victoropp/[future-repo]} \\
+\textbf{Note}: Model artifacts planned for upload post-submission
+    \end{center}
+
+\textbf{Models to be uploaded}:
+    \begin{itemize}
+    \item \texttt{ar\_baseline\_h8.pkl} (1.2 KB) - AR baseline logistic regression
+    \item \texttt{xgboost\_advanced\_fold\_[0-4].pkl} (5 $\times$ 730 KB) - XGBoost Advanced (5 folds)
+    \item \texttt{xgboost\_basic\_fold\_[0-4].pkl} (5 $\times$ 680 KB) - XGBoost Basic (5 folds)
+    \item \texttt{ablation\_ratio\_location\_fold\_[0-4].pkl} (5 $\times$ 650 KB) - Best ablation model
+    \item \texttt{mixed\_effects\_pooled\_ratio\_hmm\_dmd.pkl} (45 KB) - Mixed-effects model
+    \item \texttt{cascade\_optimised\_production.pkl} (4.2 MB) - Full cascade framework
+    \end{itemize}
+
+\textbf{Model metadata} (in repository \texttt{README.md}):
+    \begin{itemize}
+    \item Hyperparameters (JSON format)
+    \item Training data specifications
+    \item Cross-validation fold assignments
+    \item Performance metrics (AUC, precision, recall, F1)
+    \item Feature importance rankings
+    \end{itemize}
+
+\subsection{Model Loading Example}
+
+    \begin{verbatim}
+import pickle
+import pandas as pd
+
+# Load trained XGBoost model
+with open('xgboost_advanced_fold_0.pkl', 'rb') as f:
+    model = pickle.load(f)
+
+# Load test data
+X_test = pd.read_parquet('combined_advanced_features_h8.parquet')
+
+# Make predictions
+y_pred_proba = model.predict_proba(X_test)[:, 1]
+y_pred = (y_pred_proba >= 0.162).astype(int)  # Youden threshold
+    \end{verbatim}
+
+\section{Computational Resources}
+
+\subsection{Hardware Specifications}
+
+All experiments were conducted on a single workstation:
+
+\textbf{CPU}: Intel Xeon E5-2680 v4 @ 2.40GHz (14 cores, 28 threads)
+
+\textbf{RAM}: 64 GB DDR4 ECC
+
+\textbf{Storage}: 2 TB NVMe SSD
+
+\textbf{GPU}: NVIDIA Tesla V100 16GB (not used; all models CPU-based)
+
+\textbf{Operating System}: Ubuntu 22.04 LTS
+
+\subsection{Memory Requirements}
+
+    \begin{itemize}
+    \item \textbf{Peak RAM usage}: 32 GB (during SHAP TreeExplainer computation)
+    \item \textbf{Average RAM usage}: 8-12 GB (during model training)
+    \item \textbf{Disk space}: 250 GB total
+    \begin{itemize}
+        \item Raw GDELT data: 87 GB (parquet format)
+        \item Processed features: 124 GB (parquet format)
+        \item Trained models: 33 MB (all folds, all models)
+        \item Results/predictions: 15 GB (CSV format)
+        \item Figures: 450 MB (PNG format, 300 DPI)
+    \end{itemize}
+    \end{itemize}
+
+\section{Reproducibility}
+
+\subsection{Random Seeds}
+
+All stochastic processes use fixed random seeds for reproducibility:
+
+    \begin{itemize}
+    \item \textbf{NumPy}: \texttt{np.random.seed(42)}
+    \item \textbf{Scikit-learn}: \texttt{random\_state=42} (all estimators)
+    \item \textbf{XGBoost}: \texttt{random\_state=42} (all models)
+    \item \textbf{HMM/DMD}: \texttt{random\_state=42} (initialization)
+    \item \textbf{Cross-validation}: \texttt{StratifiedGroupKFold} with \texttt{n\_splits=5}, \texttt{shuffle=True}, \texttt{random\_state=42}
+    \end{itemize}
+
+\subsection{Verification}
+
+To verify reproducibility, run:
+
+    \begin{verbatim}
+python tests/test_reproducibility.py
+    \end{verbatim}
+
+This script:
+    \begin{enumerate}
+    \item Loads processed data
+    \item Trains AR baseline and XGBoost Advanced models
+    \item Compares predictions to saved reference predictions
+    \item Asserts exact match (tolerance: $10^{-12}$)
+    \end{enumerate}
+
+\textbf{Expected output}:
+    \begin{verbatim}
+[PASS] AR baseline predictions match reference (0 differences)
+[PASS] XGBoost predictions match reference (0 differences)
+[PASS] Cascade predictions match reference (0 differences)
+All reproducibility tests passed.
+    \end{verbatim}
+
+\section{Ethical Considerations and Data Privacy}
+
+\subsection{Data Ethics}
+
+\textbf{IPC Data}:
+    \begin{itemize}
+    \item Aggregated district-level statistics (no individual-level data)
+    \item Publicly available, no privacy concerns
+    \item Used in accordance with IPC Global Platform terms of use
+    \end{itemize}
+
+\textbf{GDELT News Data}:
+    \begin{itemize}
+    \item Publicly published news articles (no private communications)
+    \item No personally identifiable information (PII) extracted
+    \item News coverage analysed at aggregate level (district-month)
+    \item Complies with GDPR, CCPA, and other data protection regulations
+    \end{itemize}
+
+\subsection{Responsible AI Deployment}
+
+\textbf{Model limitations acknowledged}:
+    \begin{itemize}
+    \item High false positive rate (cascade precision 58.5\%)
+    \item Geographic heterogeneity (performance varies 10$\times$ across countries)
+    \item Autocorrelation trap (AR baseline rivals published literature benchmarks)
+    \item Selective deployment recommended (not universal)
+    \end{itemize}
+
+\textbf{Deployment safeguards}:
+    \begin{itemize}
+    \item Models intended as decision-support tools (not fully automated)
+    \item Human-in-the-loop validation required
+    \item Explainability provided via SHAP, feature importance
+    \item Country-specific calibration necessary before operational use
+    \end{itemize}
+
+\section{License and Citation}
+
+\subsection{License}
+
+All code and data are released under:
+
+\textbf{Code}: MIT License (permissive, allows commercial use)
+
+\textbf{Data}: Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+\subsection{Citation}
+
+If you use this code or data, please cite:
+
+    \begin{verbatim}
+@mastersthesis{oppon2026,
+  author  = {Victor Collins Oppon},
+  title   = {Dynamic News Signals as Early-Warning Indicators of
+             Food Insecurity: A Two-Stage Residual Modelling Framework},
+  school  = {Middlesex University},
+  year    = {2026},
+  type    = {MSc Dissertation},
+  url     = {https://github.com/victoropp/food-insecurity-early-warning},
+  note    = {Zenodo DOI pending}
+}
+    \end{verbatim}
+
+\subsection{Contact}
+
+For questions, issues, or collaboration inquiries:
+
+\textbf{Email}: \texttt{victoropp@gmail.com}
+
+\textbf{GitHub Issues}: \url{https://github.com/victoropp/food-insecurity-early-warning/issues}
+
+\textbf{ORCID}: \texttt{0000-0000-0000-0000}
+
+
+
+
