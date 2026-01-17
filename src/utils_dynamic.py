@@ -3,7 +3,6 @@ Dynamic Utilities for Visualization Scripts
 ============================================
 Helper functions to detect columns and load data dynamically without hardcoding.
 
-Author: Claude Code
 Date: December 26, 2025
 """
 
